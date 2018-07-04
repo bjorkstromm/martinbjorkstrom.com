@@ -1,0 +1,18 @@
+#recipe Blog
+
+Settings[Keys.Host] = "martinbjorkstrom.com";
+Settings["Title"] = "Martin Björkström";
+Settings["Description"] = "Driving Digital Transformation on Serverless Containers...";
+Settings["Intro"] = "Hello, my name is Martin Björkström. This is my blog, where my intentions is to write about the results of my software related tinkering. I am a father of three, fiancé of one, and a Open Source contributor.";
+Settings[Keys.LinkLowercase] = true;
+
+Pipelines.Add("Feed2",
+    Documents(Blog.BlogPosts),
+    GenerateFeeds().WithAtomPath(_ => "feed/index.xml"),
+    WriteFiles()
+);
+Pipelines.Add("Feed3",
+    Documents(Blog.BlogPosts),
+    GenerateFeeds().WithAtomPath(_ => "atom.xml"),
+    WriteFiles()
+);
