@@ -123,7 +123,7 @@ async Task GetPackageDependencies(PackageIdentity package,
     }
 }
 ```
-The above code should then output the followin:
+The above code should then output the following:
 ```
 Cake.NuGet.0.30.0 : Cake.Core [0.30.0, ), Newtonsoft.Json [11.0.2, ), NuGet.Frameworks [4.7.0, ), NuGet.PackageManagement [4.7.0, ), NuGet.ProjectModel [4.7.0, ), NuGet.Versioning [4.7.0, )
 Cake.Core.0.30.0
