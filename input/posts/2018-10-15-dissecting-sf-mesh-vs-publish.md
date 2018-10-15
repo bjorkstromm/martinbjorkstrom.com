@@ -8,7 +8,7 @@ Tags:
 # Because friends don't let friends do right-click publish
 > This is not a post on why you should not do right-click publish, but rather a post on how to avoid it when working with Azure Service Fabric Mesh. If you want an answer for the why part, please read [Damian Brady's blog post](https://damianbrady.com.au/2018/02/01/friends-dont-let-friends-right-click-publish/) on the subject.
 
-If you've ever looked at the [Azure Service Fabric Mesh tutorials](https://docs.microsoft.com/en-us/azure/service-fabric-mesh/), you've probably noticed that they only show you how to do right-click publish (or deploy pre-made ARM-templates). In order to understand how to avoid right-click publish, we'll need to understand what right-click publish does. Therefore, in this blog post we're going to dissect the right-click publish feature of [Service Fabric Mesh Tools for Visual Studio](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.ServiceFabricMesh). Before I started any practical work, which eventually lead to this blog post, I had an rough idea on how to bypass right-click publish when working with Azure Service Fabric Mesh solutions and Visual Studio, namely:
+If you've ever looked at the [Azure Service Fabric Mesh tutorials](https://docs.microsoft.com/en-us/azure/service-fabric-mesh/), you've probably noticed that they only show you how to do right-click publish (or deploy pre-made ARM-templates). In order to understand how to avoid right-click publish, we'll need to understand what right-click publish does. Therefore, in this blog post we're going to dissect the right-click publish feature of [Service Fabric Mesh Tools for Visual Studio](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.ServiceFabricMesh). Before I started any practical work, which eventually lead to this blog post, I had a rough idea on how to bypass right-click publish when working with Azure Service Fabric Mesh solutions and Visual Studio, namely:
 * Create docker images for each service in the application
 * Push the docker images to an Azure Container Registry
 * Generate an ARM template
@@ -62,7 +62,7 @@ In the logs, we can see that the above target will find all services and build d
   Successfully built 915e93d027a6
   Successfully tagged webfrontend:dev
 ```
-The above step solved solved the first issue for us, it created docker images for each service in the application. While we could have searched for all dockerfile's ourselves and run `docker build`, I find the MSBuild target a little more helpful.
+The above step solved the first issue for us, it created docker images for each service in the application. While we could have searched for all dockerfile's ourselves and run `docker build`, I find the MSBuild target a little more helpful.
 
 ## Push the docker images to an Azure Container Registry
 Next thing to do is to push our newly created docker images to a container registry. If you don't already have an Azure Container Registry, please follow the steps [here](https://docs.microsoft.com/en-us/azure/container-registry/container-registry-get-started-portal) to create one and obtain the access keys (login server, username and password). Now, to push our local docker images to the Azure Container Registry, we'll just follow some of the examples found [here](https://docs.microsoft.com/en-us/azure/container-registry/container-registry-get-started-docker-cli).
@@ -173,7 +173,7 @@ To recieve additional information run the following to get the status of the app
 az mesh app show --resource-group todolistapp-rg --name todolistapp
 ```
 
-Now, just open a browser and head over to the ip address and see your application in action. Make sure to also specify the correct port. The sample use `20006` as default, so in the above example I'd open my browser and go to http://40.76.208.91:20006/.
+Now, just open a browser and head over to the IP address and see your application in action. Make sure to also specify the correct port. The sample use `20006` as default, so in the above example I'd open my browser and go to http://40.76.208.91:20006/.
 
 ## Conclusion
 While we got pretty far by just using the msbuild targets located in `Microsoft.VisualStudio.Azure.SFApp.Targets` we still need to do some manual work with pushing docker images and modifying the ARM-template. AFAIK, the msbuild targets don't understand publish profile `yaml`-files as these are solely intended to be used with the Visual Studio Tooling (ie. right-click deploy). We still have some work to do before we can deploy Service Fabric Mesh applications from our CI/CD pipeline. However, if it can be documented, it can be automated. Therefore, stay tuned for a follow up blog post on how to automate the above steps with [Cake](https://cakebuild.net/).
