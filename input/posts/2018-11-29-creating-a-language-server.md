@@ -1,5 +1,5 @@
 Title: Creating a language server using .NET
-Published: 2018-11-26
+Published: 2018-11-29
 Tags: 
 - Open Source
 - .NET
@@ -15,11 +15,11 @@ Tags:
 LSP is a protocol originally developed by Microsoft for Visual Studio Code, which has evolved into an open standard that is supported by a wide range of editors and IDE's, including Visual Studio, Visual Studio Code, Eclipse, Atom, vim and emacs. The specification can be found on [GitHub](https://github.com/Microsoft/language-server-protocol) and through the [official LSP website](https://microsoft.github.io/language-server-protocol/specification). Visual Studio Code docs include a sample on [how to create a language server](https://code.visualstudio.com/docs/extensions/example-language-server) using Node.js®. But if you, like me, shouldn't be trusted with JavaScript, I have good news for you. In the rest of this blog post I'll walk you through the process of creating a Language Server supporting LSP using C# and .NET Core.
 
 ## Language Server Implementation
-In this sample, we are going to create a Language Server for `*.csproj` which enables autocomplete for `<PackageReference>` elements. We are going to focus on integrating it with Visual Studio Code, but since LSP is supported by a wide range of IDE´s and editors, the effort for integrating it with any other editor should be minimal. To create a Language Server using .NET, we are going to use [OmniSharp.Extensions.LanguageServer](https://www.nuget.org/packages/OmniSharp.Extensions.LanguageServer/), which is a C# implementation of the LSP, maintained by the [OmniSharp](http://www.omnisharp.net/) team.
+In this sample, we are going to create a Language Server for `*.csproj` which enables autocomplete for `<PackageReference>` elements. We are going to focus on integrating it with Visual Studio Code, but since LSP is supported by a wide range of IDE´s and editors, the effort for integrating it with any other editor should be minimal. To create a Language Server using .NET, we are going to use [OmniSharp.Extensions.LanguageServer](https://www.nuget.org/packages/OmniSharp.Extensions.LanguageServer/), which is a C# implementation of the LSP, authored by [David Driscoll](https://github.com/david-driscoll) member of the [OmniSharp](http://www.omnisharp.net/) team.
 
 For parsing XML, we are going to use [Kirill Osenkov's XmlParser](https://github.com/KirillOsenkov/XmlParser). You may think that using `XmlReader` or `LINQ to XML` would be sufficient, this is however not true. The first and most important rule of implementing a Language Server, is that you'll need an error tolerant parser as most of the time the code in the editor is incomplete and syntactically incorrect. Microsoft left some valuable notes [here](https://github.com/Microsoft/tolerant-php-parser/blob/master/docs/HowItWorks.md) when they created the tolerant PHP parser, which currently backs PHP support in Visual Studio Code. Again, don't parse the files yourself (unless you know what you are doing), use a proper parser to get an Abstract Syntax Tree (AST).
 
-The full sample which we'll create in the rest of this blog post is available on Github at [https://github.com/mholo65/lsp-example/tree/blog-post](https://github.com/mholo65/lsp-example/tree/blog-post).
+The full sample which we'll create in the rest of this blog post is available on GitHub at [https://github.com/mholo65/lsp-example/tree/blog-post](https://github.com/mholo65/lsp-example/tree/blog-post).
 
 ### Creating the server
 First, well start of by creating a new .NET Core console application.
@@ -333,6 +333,7 @@ class Program
 </code></pre>
 
 ### Creating the client
+Creating a Visual Studio Code Extension, aka the LSP client which utilizes our Language Server, is quite straightforward. We need to specify an activation event in `package.json` and then create a LSP client which starts the language server in our `activate` function. In this sample, we'll activate the extension when a XML file is opened and then configure our LSP client to synchronize any changes made to `.csproj` files with the Language Server.
 
 _package.json_
 ```json
@@ -374,8 +375,8 @@ export function activate(context: ExtensionContext) {
     // If the extension is launched in debug mode then the debug server options are used
     // Otherwise the run options are used
     let serverOptions: ServerOptions = {
-        run: { command: serverExe, args: ['C:\\Users\\mb\\src\\gh\\lsp-example\\Server\\Server\\bin\\Debug\\netcoreapp2.1\\Server.dll'] },
-        debug: { command: serverExe, args: ['C:\\Users\\mb\\src\\gh\\lsp-example\\Server\\Server\\bin\\Debug\\netcoreapp2.1\\Server.dll'] }
+        run: { command: serverExe, args: ['/path/to/Server.dll'] },
+        debug: { command: serverExe, args: ['/path/to/Server.dll'] }
     }
 
     // Options to control the language client
@@ -405,10 +406,12 @@ export function activate(context: ExtensionContext) {
 ```
 
 ### Profit
+If you've read this far and maybe checked out the code in the [sample repository](https://github.com/mholo65/lsp-example/tree/blog-post), you should have a Visual Studio Code extension which adds autocomplete functionality for package references in `.csproj` files, just like in the tweet below.
 <blockquote class="twitter-tweet" data-conversation="none" data-lang="en"><p lang="en" dir="ltr">Now using XmlParser. Code&#39;s much cleaner, and it was a piece of cake to also get autocomplete for version. Btw, source is here <a href="https://t.co/cUnKGliC4T">https://t.co/cUnKGliC4T</a> <a href="https://t.co/ac3LizlY4S">pic.twitter.com/ac3LizlY4S</a></p>&mdash; Martin Björkström (@mholo65) <a href="https://twitter.com/mholo65/status/1066815193718669313?ref_src=twsrc%5Etfw">November 25, 2018</a></blockquote>
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
+&nbsp;
+## Credits and Resources
+If you think `<PackageReference>` autocomplete is cool, then you should definitely check out [Adam Friedman's](https://github.com/tintoy) [MSBuild project tools](https://marketplace.visualstudio.com/items?itemName=tintoy.msbuild-project-tools) extension for Visual Studio Code. The extension includes `<PackageReference>` autocomplete and a bunch of other useful tools for MSBuild project files. The source for the Language Server (which uses the same LSP libraries as used in this sample) is available on [GitHub](https://github.com/tintoy/msbuild-project-tools-server). Other examples of language servers implemented in .NET, using the same awesome [OmniSharp.Extensions.LanguageServer](https://www.nuget.org/packages/OmniSharp.Extensions.LanguageServer/) libraries are [Razor for VSCode](https://github.com/aspnet/Razor.VSCode/tree/master/src/Microsoft.AspNetCore.Razor.LanguageServer) and [LSP support for OmniSharp Roslyn](https://github.com/OmniSharp/omnisharp-roslyn/tree/master/src/OmniSharp.LanguageServerProtocol).
 
-## Credits
-
-## Example code
+If you're curious about LSP support in .NET or have additional questions, please come hang out with Adam, David and me in the [OmniSharp Slack](https://omnisharp.herokuapp.com/) `#lsp` channel.
