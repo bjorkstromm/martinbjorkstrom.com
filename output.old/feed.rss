@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0">
+	<channel>
+		<title>Martin Björkström</title>
+		<link>http://martinbjorkstrom.com/</link>
+		<description>Driving Digital Transformation on Serverless Containers...</description>
+		<copyright>2019</copyright>
+		<pubDate>Sat, 07 Dec 2019 19:50:36 GMT</pubDate>
+		<lastBuildDate>Sat, 07 Dec 2019 19:50:36 GMT</lastBuildDate>
+		<item>
+			<title>Creating a language server using .NET</title>
+			<link>http://martinbjorkstrom.com/posts/2018-11-29-creating-a-language-server</link>
+			<description>Driving Digital Transformation on Serverless Containers...</description>
+			<guid>http://martinbjorkstrom.com/posts/2018-11-29-creating-a-language-server</guid>
+			<pubDate>Thu, 29 Nov 2018 00:00:00 GMT</pubDate>
+		</item>
+		<item>
+			<title>Dissecting the Azure Service Fabric Mesh Right-Click Publish</title>
+			<link>http://martinbjorkstrom.com/posts/2018-10-15-dissecting-sf-mesh-vs-publish</link>
+			<description>Driving Digital Transformation on Serverless Containers...</description>
+			<guid>http://martinbjorkstrom.com/posts/2018-10-15-dissecting-sf-mesh-vs-publish</guid>
+			<pubDate>Mon, 15 Oct 2018 00:00:00 GMT</pubDate>
+		</item>
+		<item>
+			<title>Open Sourcing Alpha-Beta</title>
+			<link>http://martinbjorkstrom.com/posts/2018-10-09-open-sourcing-alpha-beta</link>
+			<description>Driving Digital Transformation on Serverless Containers...</description>
+			<guid>http://martinbjorkstrom.com/posts/2018-10-09-open-sourcing-alpha-beta</guid>
+			<pubDate>Tue, 09 Oct 2018 00:00:00 GMT</pubDate>
+		</item>
+		<item>
+			<title>Revisiting the NuGet v3 Libraries</title>
+			<link>http://martinbjorkstrom.com/posts/2018-09-19-revisiting-nuget-client-libraries</link>
+			<description>Driving Digital Transformation on Serverless Containers...</description>
+			<guid>http://martinbjorkstrom.com/posts/2018-09-19-revisiting-nuget-client-libraries</guid>
+			<pubDate>Wed, 19 Sep 2018 00:00:00 GMT</pubDate>
+		</item>
+		<item>
+			<title>Announcing dotnet depends</title>
+			<link>http://martinbjorkstrom.com/posts/2018-08-06-announcing-dotnet-depends</link>
+			<description>Driving Digital Transformation on Serverless Containers...</description>
+			<guid>http://martinbjorkstrom.com/posts/2018-08-06-announcing-dotnet-depends</guid>
+			<pubDate>Mon, 06 Aug 2018 00:00:00 GMT</pubDate>
+		</item>
+		<item>
+			<title>Hello World</title>
+			<link>http://martinbjorkstrom.com/posts/2018-07-05-hello-world</link>
+			<description>Driving Digital Transformation on Serverless Containers...</description>
+			<guid>http://martinbjorkstrom.com/posts/2018-07-05-hello-world</guid>
+			<pubDate>Thu, 05 Jul 2018 00:00:00 GMT</pubDate>
+		</item>
+	</channel>
+</rss>

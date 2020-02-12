@@ -1,0 +1,153 @@
+﻿
+<!DOCTYPE html>
+<!--
+	Phantom by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html lang="en">
+
+	<head>
+		<title>Martin Bj&#xF6;rkstr&#xF6;m - Open Sourcing Alpha-Beta</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1" />		
+        <link href="/assets/css/highlight.css" rel="stylesheet">
+		<!--[if lte IE 8]><script src="/assets/js/ie/html5shiv.js"></script><![endif]-->
+		<link rel="stylesheet" href="/assets/css/main.css" />
+		<!--[if lte IE 9]><link rel="stylesheet" href="/assets/css/ie9.css" /><![endif]-->
+		<!--[if lte IE 8]><link rel="stylesheet" href="/assets/css/ie8.css" /><![endif]-->
+        <link href="/assets/css/override.css" rel="stylesheet" />
+
+		<meta name="description" content="Driving Digital Transformation on Serverless Containers..." />
+		<link type="application/rss+xml" rel="alternate" title="Martin Bj&#xF6;rkstr&#xF6;m" href="/feed.rss" />
+				<link type="application/atom+xml" rel="alternate" title="Martin Bj&#xF6;rkstr&#xF6;m" href="/feed.atom" />
+		<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+		<link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+		<meta name="application-name" content="Martin Bj&#xF6;rkstr&#xF6;m" />
+		<meta name="msapplication-tooltip" content="Martin Bj&#xF6;rkstr&#xF6;m" />
+		<meta name="msapplication-starturl" content="/" />
+
+		<meta property="og:title" content="Martin Bj&#xF6;rkstr&#xF6;m - Open Sourcing Alpha-Beta" /> 
+		<meta property="og:type" content="website" />
+		<meta property="og:url" content="http://martinbjorkstrom.com/posts/2018-10-09-open-sourcing-alpha-beta" />
+		<!-- TODO: More social graph meta tags -->
+
+        <script src="/assets/js/highlight.pack.js"></script>   
+		
+        
+
+		
+	</head>
+
+	<body>
+		<!-- Wrapper -->
+		<div id="wrapper">
+
+			<!-- Header -->
+			<header id="header">
+				<div class="inner">
+
+					<!-- Logo -->
+					<a href="/" class="logo">
+						<span class="title">Martin Bj&#xF6;rkstr&#xF6;m</span>
+					</a>
+
+					<!-- Nav -->
+					<nav>
+						<ul>
+							<li><a href="#menu">Menu</a></li>
+						</ul>
+					</nav>
+
+				</div>
+			</header>
+
+			<!-- Menu -->
+			<nav id="menu">
+				<h2>Menu</h2>
+				<ul>
+					        <li><a href="/posts">Archive</a></li>
+        <li><a href="/tags">Tags</a></li>
+
+				</ul>
+			</nav>
+
+			<!-- Main -->
+			<div id="main">
+				<div class="inner">
+
+    
+<header>
+    <h1>Open Sourcing Alpha-Beta</h1>
+            <p><em>Published on Tuesday, 9 October 2018</em></p>
+            <ul class="actions small">
+                    <li><a role="button" href="/tags/net" class="button small">.NET</a></li>
+                    <li><a role="button" href="/tags/azure" class="button small">Azure</a></li>
+                    <li><a role="button" href="/tags/cognitive-services" class="button small">Cognitive Services</a></li>
+                    <li><a role="button" href="/tags/open-source" class="button small">Open Source</a></li>
+        </ul>     
+</header>
+
+					
+					<div id="content">
+						
+
+<p><a href="https://github.com/mholo65/alpha-beta">Alpha-Beta</a> is a simple learning game I made for my children about a year ago that I'm now open sourcing. It's a fun way for kids to learn to write words, and locate keys on the keyboard. The game picks a random word from a list for the user to type. It uses Azure cognitive services like <a href="https://docs.microsoft.com/en-us/azure/cognitive-services/bing-image-search/">Bing Image Search</a> for searching related images and <a href="https://docs.microsoft.com/en-us/azure/cognitive-services/speech/home">Bing Speech</a> for reading the word out loud. See it in action below:</p>
+<p><img src="https://raw.githubusercontent.com/mholo65/alpha-beta/master/media/demo.gif" class="img-fluid" alt="alpha-beta" /></p>
+<p>The game is multilingual, just specify the locale in <code>app.config</code> and you're good to go. It <em>should</em>  support all the locales that are supported by Bing Speech (see list <a href="https://docs.microsoft.com/en-us/azure/cognitive-services/Speech/api-reference-rest/bingvoiceoutput#SupLocales">here</a>), although  I've only tested <code>fi-FI</code>, <code>sv-SE</code>, <code>en-US</code> and <code>en-GB</code>. I also tried to make it super simple for my non-programming significant other to add and remove words used in the game. Currently it picks the words from a <code>txt</code>-file, where each words used are separated by a new line. I know that there are lots of similar games out there, but since my kids are swedish speaking, it was hard to find something good. Creating Alpha-Beta also got me to do some hands-on work with Azure cognitive services, which was a pleasant acquaintance.</p>
+<p>Source can be found <a href="https://github.com/mholo65/alpha-beta">here</a>. It currently only runs on Windows, and you'll need an Azure subscription and have to set up <code>Bing Search</code> and <code>Bing Speech</code>. Guide for setting up Azure cognitive services can be found <a href="https://docs.microsoft.com/en-us/azure/cognitive-services/cognitive-services-apis-create-account">here</a>. Happy hacking! I hope your kids will have as much fun with it as mine have had.</p>
+
+
+
+					</div>
+				</div>
+			</div>
+
+			<!-- Footer -->
+			<footer id="footer">
+				<div class="inner">
+    <section>
+        <h2>Feeds</h2>
+        <ul class="actions small vertical">
+            <li><a href="/feed.rss" class="button small"><i class="fa fa-rss"></i> RSS Feed</a></li>
+                        <li><a href="/feed.atom" class="button small"><i class="fa fa-rss"></i> Atom Feed</a></li>
+        </ul>
+    </section>
+    <section>
+    </section>
+    <ul class="copyright">
+        <li>Copyright © 2019</li>
+        <li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+        <li><a href="https://wyam.io">Generated by Wyam</a></li>
+    </ul>
+</div>
+
+			</footer>
+
+		</div>
+		
+		<script type="text/javascript">
+    // Google Analytics
+    (function (i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+        (i[r].q = i[r].q || []).push(arguments)
+        }, i[r].l = 1 * new Date(); a = s.createElement(o),
+        m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+    ga('create', 'UA-121782933-1', 'auto');
+    ga('send', 'pageview');
+</script>
+
+		<!-- Scripts -->
+		<script>hljs.initHighlightingOnLoad();</script>
+		<script src="/assets/js/jquery.min.js"></script>
+		<script src="/assets/js/skel.min.js"></script>
+		<script src="/assets/js/util.js"></script>
+		<!--[if lte IE 8]><script src="/assets/js/ie/respond.min.js"></script><![endif]-->
+		<script src="/assets/js/main.js"></script>
+
+	</body>
+
+</html>

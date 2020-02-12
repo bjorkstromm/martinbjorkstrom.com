@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <StatiqVersion>1.0.0-alpha.21</StatiqVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Statiq.App" Version="$(StatiqVersion)" />
+    <PackageReference Include="Statiq.Html" Version="$(StatiqVersion)" />
+    <PackageReference Include="Statiq.Markdown" Version="$(StatiqVersion)" />
+    <PackageReference Include="Statiq.Razor" Version="$(StatiqVersion)" />
+    <PackageReference Include="Statiq.Yaml" Version="$(StatiqVersion)" />
+  </ItemGroup>
+
+</Project>
