@@ -1,0 +1,23 @@
+@{
+    List<Tuple<string, string>> pages = Context
+        .Inputs
+        //.Documents[Blog.Pages]
+        //.Where(x => x.Bool(BlogKeys.ShowInNavbar, true))
+        .Where(x => !x.Destination.FileNameWithoutExtension.FullPath.StartsWith("index"))
+        .Select(x => Tuple.Create(x.GetString(Keys.Title), Context.GetLink(x)))
+        .Where(x => !string.IsNullOrEmpty(x.Item1))
+        .OrderBy(x => x.Item1)
+        .ToList();
+    if(Context.GetDocumentList("Tags").Any())
+    {
+        pages.Insert(0, Tuple.Create("Tags", Context.GetLink("tags/index.html")));
+    }
+    if(Context.GetDocumentList("Archive").Any())
+    {
+        pages.Insert(0, Tuple.Create("Archive", Context.GetLink(Context.GetString("PostsPath") + "/index.html")));
+    }
+    foreach(Tuple<string, string> page in pages)
+    {
+        <li><a href="@(page.Item2)">@(page.Item1)</a></li>
+    }
+}

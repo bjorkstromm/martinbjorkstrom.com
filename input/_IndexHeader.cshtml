@@ -1,0 +1,10 @@
+<header>
+    @if(Context.GetString("Description") != null)
+    {
+        <h1>@Context.GetString("Description")</h1>
+    }
+    @if(Context.GetString("Intro") != null)
+    {            
+        <p>@Context.GetString("Intro")</p>
+    }
+</header>

@@ -1,0 +1,23 @@
+@model IEnumerable<IDocument>
+
+@{
+    foreach (IDocument post in Model)
+    {
+        string lead = post.GetString("Lead");
+        
+        <div>
+            <a href="@Context.GetLink(post)">
+                <h2>@post.GetString(Keys.Title)</h2>
+            </a>
+            @if(!string.IsNullOrWhiteSpace(lead))
+            {
+                <p>@lead</p>
+            }
+            <p><em>Posted on @(post.Get<DateTime>(WebKeys.Published).ToLongDateString(Context))</em></p>      
+            @if(Context.GetBool("ArchiveExcerpts"))
+            {
+                @Html.Raw(post.GetString("Excerpt"))
+            }
+        </div>   
+    }
+}
