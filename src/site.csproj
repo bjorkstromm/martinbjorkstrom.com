@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="Handlebars.Net" Version="1.10.1" />
+    <PackageReference Include="Statiq.App" Version="1.0.0-alpha.29" />
+    <PackageReference Include="Statiq.Yaml" Version="1.0.0-alpha.29" />
+    <PackageReference Include="Statiq.Markdown" Version="1.0.0-alpha.29" />
+  </ItemGroup>
+
+</Project>

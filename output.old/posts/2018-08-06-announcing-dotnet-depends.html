@@ -1,0 +1,157 @@
+﻿
+<!DOCTYPE html>
+<!--
+	Phantom by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html lang="en">
+
+	<head>
+		<title>Martin Bj&#xF6;rkstr&#xF6;m - Announcing dotnet depends</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1" />		
+        <link href="/assets/css/highlight.css" rel="stylesheet">
+		<!--[if lte IE 8]><script src="/assets/js/ie/html5shiv.js"></script><![endif]-->
+		<link rel="stylesheet" href="/assets/css/main.css" />
+		<!--[if lte IE 9]><link rel="stylesheet" href="/assets/css/ie9.css" /><![endif]-->
+		<!--[if lte IE 8]><link rel="stylesheet" href="/assets/css/ie8.css" /><![endif]-->
+        <link href="/assets/css/override.css" rel="stylesheet" />
+
+		<meta name="description" content="Driving Digital Transformation on Serverless Containers..." />
+		<link type="application/rss+xml" rel="alternate" title="Martin Bj&#xF6;rkstr&#xF6;m" href="/feed.rss" />
+				<link type="application/atom+xml" rel="alternate" title="Martin Bj&#xF6;rkstr&#xF6;m" href="/feed.atom" />
+		<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+		<link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+		<meta name="application-name" content="Martin Bj&#xF6;rkstr&#xF6;m" />
+		<meta name="msapplication-tooltip" content="Martin Bj&#xF6;rkstr&#xF6;m" />
+		<meta name="msapplication-starturl" content="/" />
+
+		<meta property="og:title" content="Martin Bj&#xF6;rkstr&#xF6;m - Announcing dotnet depends" /> 
+		<meta property="og:type" content="website" />
+		<meta property="og:url" content="http://martinbjorkstrom.com/posts/2018-08-06-announcing-dotnet-depends" />
+		<!-- TODO: More social graph meta tags -->
+
+        <script src="/assets/js/highlight.pack.js"></script>   
+		
+        
+
+		
+	</head>
+
+	<body>
+		<!-- Wrapper -->
+		<div id="wrapper">
+
+			<!-- Header -->
+			<header id="header">
+				<div class="inner">
+
+					<!-- Logo -->
+					<a href="/" class="logo">
+						<span class="title">Martin Bj&#xF6;rkstr&#xF6;m</span>
+					</a>
+
+					<!-- Nav -->
+					<nav>
+						<ul>
+							<li><a href="#menu">Menu</a></li>
+						</ul>
+					</nav>
+
+				</div>
+			</header>
+
+			<!-- Menu -->
+			<nav id="menu">
+				<h2>Menu</h2>
+				<ul>
+					        <li><a href="/posts">Archive</a></li>
+        <li><a href="/tags">Tags</a></li>
+
+				</ul>
+			</nav>
+
+			<!-- Main -->
+			<div id="main">
+				<div class="inner">
+
+    
+<header>
+    <h1>Announcing dotnet depends</h1>
+            <p><em>Published on Monday, 6 August 2018</em></p>
+            <ul class="actions small">
+                    <li><a role="button" href="/tags/net" class="button small">.NET</a></li>
+                    <li><a role="button" href="/tags/open-source" class="button small">Open Source</a></li>
+        </ul>     
+</header>
+
+					
+					<div id="content">
+						
+
+<h2 id="tldr">TL;DR;</h2>
+<p><a href="https://github.com/mholo65/depends/releases/tag/0.1.0">dotnet depends v0.1.0</a> has now been released. This is a tool for exploring dependencies in .NET projects, with an GUI heavily inspired from <a href="https://wiki.yoctoproject.org/wiki/BitBake/GUI">bitbake's depexp</a>. Hopefully this tool will be a valuable addition to your toolbox when e.g. debugging transitive dependencies. Install it by running: <code>dotnet tool install --global dotnet-depends</code>, and report any issues and/or feature requests on <a href="https://github.com/mholo65/depends">Github</a>.</p>
+<h2 id="background">Background</h2>
+<p>Ever since <a href="https://daveaglick.com/posts/running-a-design-time-build-with-msbuild-apis">Dave Glick announced Buildalyzer</a>, I knew I wanted to build something with it. I had been thinking about a dependency explorer, since you know, debugging transitive dependencies in .NET really sucks. It always takes a dozen of clicks on <a href="https://www.nuget.org/">nuget.org</a> and a couple of minutes scrolling up-and-down in <code>project.assets.json</code> to figure out which dependency brought in package A, which in turn was incompatible with package B.</p>
+<p>At first, when I started playing with <a href="https://github.com/daveaglick/Buildalyzer">Buildalyzer</a>, I was determined that the tool should output a dependency graph in the <a href="https://en.wikipedia.org/wiki/DOT_(graph_description_language)">DOT language</a>, which in turn could be converted to SVG or PNG using <a href="https://www.graphviz.org/">graphviz</a>. After a few attempts I came to the conclusion that the graphs easily became too messy and was hard to interpret. I was close to accept my defeat, when I remembered a great tool called <code>depexp</code> which I had used with <a href="https://www.yoctoproject.org/">Yocto</a> back in the days, when I was creating/tweaking embedded Linux distros (narrator: he still does, occasionally...).</p>
+<p>Next problem then... Since I wanted this to be a <a href="https://docs.microsoft.com/en-us/dotnet/core/tools/global-tools">.NET Core global tool</a>, how do I introduce a GUI like <code>depexp</code> in a .NET Core console application? I then remembered the console UI toolkit for .NET <a href="https://twitter.com/migueldeicaza/status/964352496243273728">Miguel de Icaza announced</a>. So, I took a dependency on <a href="https://github.com/migueldeicaza/gui.cs">Terminal.Gui / Gui.cs</a>, and tweeted this:</p>
+<blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">Been playing with Buildalyzer and this is what I came up with. A simple dependency explorer for <a href="https://twitter.com/hashtag/dotnet?src=hash&amp;ref_src=twsrc%5Etfw">#dotnet</a>. GUI influenced by bitbake&#39;s depexp and powered by gui.cs.<br><br>Source can be found here: <a href="https://t.co/eJqSgjQ2ky">https://t.co/eJqSgjQ2ky</a> <a href="https://t.co/7DbESQUs75">pic.twitter.com/7DbESQUs75</a></p>&mdash; Martin Björkström (&#64;mholo65) <a href="https://twitter.com/mholo65/status/1014128499987288069?ref_src=twsrc%5Etfw">July 3, 2018</a></blockquote>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+<p>Feedback was awesome, so I submitted a couple of <a href="https://github.com/migueldeicaza/gui.cs/pulls?q=is%3Apr+is%3Aclosed+author%3Amholo65">PR's to Gui.cs</a> and awaited Buildalyzer v1.0.0 before releasing v0.1.0 of <code>dotnet depends</code>.</p>
+<p>Curious to see how it works? Install it by running: <code>dotnet tool install --global dotnet-depends</code>, and then run <code>dotnet depends /path/to/myproject.csproj</code>. If your project targets multiple frameworks, you can specify the target by appending the <code>-f|--framework &lt;FRAMEWORK&gt;</code> option. Please remember to report any issues and/or feature requests on <a href="https://github.com/mholo65/depends">Github</a>. Happy hacking!</p>
+
+
+
+					</div>
+				</div>
+			</div>
+
+			<!-- Footer -->
+			<footer id="footer">
+				<div class="inner">
+    <section>
+        <h2>Feeds</h2>
+        <ul class="actions small vertical">
+            <li><a href="/feed.rss" class="button small"><i class="fa fa-rss"></i> RSS Feed</a></li>
+                        <li><a href="/feed.atom" class="button small"><i class="fa fa-rss"></i> Atom Feed</a></li>
+        </ul>
+    </section>
+    <section>
+    </section>
+    <ul class="copyright">
+        <li>Copyright © 2020</li>
+        <li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+        <li><a href="https://wyam.io">Generated by Wyam</a></li>
+    </ul>
+</div>
+
+			</footer>
+
+		</div>
+		
+		<script type="text/javascript">
+    // Google Analytics
+    (function (i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+        (i[r].q = i[r].q || []).push(arguments)
+        }, i[r].l = 1 * new Date(); a = s.createElement(o),
+        m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+    ga('create', 'UA-121782933-1', 'auto');
+    ga('send', 'pageview');
+</script>
+
+		<!-- Scripts -->
+		<script>hljs.initHighlightingOnLoad();</script>
+		<script src="/assets/js/jquery.min.js"></script>
+		<script src="/assets/js/skel.min.js"></script>
+		<script src="/assets/js/util.js"></script>
+		<!--[if lte IE 8]><script src="/assets/js/ie/respond.min.js"></script><![endif]-->
+		<script src="/assets/js/main.js"></script>
+
+	</body>
+
+</html>
