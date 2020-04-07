@@ -44,30 +44,37 @@ namespace site
         }
     }
 
-    public class TagListPipeline : Pipeline
+    public class TagIndexPipeline : Pipeline
     {
-        public TagListPipeline()
+        public TagIndexPipeline()
         {
-            Dependencies.Add(nameof(BlogPostPipeline));
+            Dependencies.Add(nameof(TagsPipeline));
+            
+            InputModules = new ModuleList
+            {
+                new ReadFiles("_tagIndex.hbs")
+            };
 
             ProcessModules = new ModuleList
             {
-                new ExecuteConfig(Config.FromContext(context =>
-                {
-                    var groups = context.Outputs
-                        .FromPipeline(nameof(BlogPostPipeline))
-                        .Select(x => (Document: x, Keys: x.GetList<string>("Tags")))
-                        .ToList();
-
-                    return groups
-                        .GroupByMany(x => x.Keys, x => x.Document)
-                        .Select(x => context.CreateDocument(
-                            new MetadataItems
+                new SetDestination(Config.FromValue(new NormalizedPath("./tags/index.html"))),
+                new RenderHandlebars()
+                    .WithModel(Config.FromContext(context => new
+                    {
+                        tags = context.Outputs.FromPipeline(nameof(TagsPipeline))
+                            .OrderBy(x => x.GetString(Keys.GroupKey))
+                            .Select(tag => new
                             {
-                                { Keys.Children, x.ToImmutableArray() },
-                                { Keys.GroupKey, x.Key }
-                            }));
-                }))
+                                link = context.GetLink(tag),
+                                title = tag.GetString(Keys.GroupKey),
+                                count = tag.GetChildren().Length
+                            })
+                    }))
+            };
+
+            OutputModules = new ModuleList
+            {
+                new WriteFiles()
             };
         }
     }
@@ -108,8 +115,50 @@ namespace site
                             .Select(tag => new
                             {
                                 link = context.GetLink(tag),
-                                title = doc.GetString(Keys.GroupKey),
-                                count = doc.GetChildren().Length
+                                title = tag.GetString(Keys.GroupKey),
+                                count = tag.GetChildren().Length
+                            })
+                    }))
+            };
+
+            OutputModules = new ModuleList
+            {
+                new WriteFiles()
+            };
+        }
+    }
+
+    public class ArchivePipeline : Pipeline
+    {
+        public ArchivePipeline()
+        {
+            Dependencies.Add(nameof(BlogPostPipeline));
+
+            InputModules = new ModuleList
+            {
+                new ReadFiles("_archive.hbs")
+            };
+
+            ProcessModules = new ModuleList
+            {
+                new SetDestination(Config.FromValue(new NormalizedPath("./posts/index.html"))),
+                new RenderHandlebars()
+                    .WithModel(Config.FromContext(context => new
+                    {
+                        groups = context.Outputs.FromPipeline(nameof(BlogPostPipeline))
+                            .GroupBy(x => x.GetDateTime("Published").Year)
+                            .OrderByDescending(x => x.Key)
+                            .Select(group => new
+                            {
+                                key = group.Key,
+                                posts = group
+                                    .OrderByDescending(x => x.GetDateTime("Published"))
+                                    .Select(doc => new
+                                    {
+                                        link = context.GetLink(doc),
+                                        title = doc.GetString(Keys.Title),
+                                        date = doc.GetDateTime("Published").ToLongDateString()
+                                    }),
                             })
                     }))
             };
