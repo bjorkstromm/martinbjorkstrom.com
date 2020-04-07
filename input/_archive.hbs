@@ -1,25 +1,20 @@
-﻿<!-- Main -->
-<div id="main">
-    <div class="inner">
-        <h1>Archive</h1>
+﻿<h1>Archive</h1>
 
-        <div id="content">
+<div id="content">
 
-            {{#each groups}}
-            <h1>{{key}}</h1>
-            <hr />
+    {{#each groups}}
+    <h1>{{key}}</h1>
+    <hr />
 
-            {{#each posts}}
-            <div>
-                <a href="{{link}}">
-                    <h2>{{title}}</h2>
-                </a>
-                <p><em>Posted on {{date}}</em></p>
-            </div>
-            {{/each}}
-
-            {{/each}}
-
-        </div>
+    {{#each posts}}
+    <div>
+        <a href="{{link}}">
+            <h2>{{title}}</h2>
+        </a>
+        <p><em>Posted on {{date}}</em></p>
     </div>
+    {{/each}}
+
+    {{/each}}
+
 </div>

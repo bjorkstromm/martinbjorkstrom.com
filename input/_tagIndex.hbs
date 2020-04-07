@@ -1,14 +1,9 @@
-﻿<!-- Main -->
-<div id="main">
-    <div class="inner">
-        <h1>All Tags</h1>
+﻿<h1>All Tags</h1>
 
-        <div id="content">
-            <ul class="actions small">
-                {{#each tags}}
-                <li><a role="button" href="{{link}}" class="button small ">{{title}} ({{count}})</a></li>
-                {{/each}}
-            </ul>
-        </div>
-    </div>
+<div id="content">
+    <ul class="actions small">
+        {{#each tags}}
+        <li><a role="button" href="{{link}}" class="button small ">{{title}} ({{count}})</a></li>
+        {{/each}}
+    </ul>
 </div>
