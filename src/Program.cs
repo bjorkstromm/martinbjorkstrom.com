@@ -1,9 +1,11 @@
-﻿using System.Collections.Immutable;
+﻿using System;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
 using Statiq.App;
 using Statiq.Common;
 using Statiq.Core;
+using Statiq.Feeds;
 using Statiq.Handlebars;
 using Statiq.Html;
 using Statiq.Markdown;
@@ -18,6 +20,7 @@ namespace site
             return Bootstrapper
                 .Factory
                 .CreateDefault(args)
+                .AddSetting(Keys.LinkLowercase, true) 
                 .RunAsync();
         }
     }
@@ -39,34 +42,42 @@ namespace site
                 new SetDestination(".html")
             };
 
-            PostProcessModules = new ModuleList
-            {
-                new SetMetadata("template", Config.FromContext(async ctx => await ctx.Outputs
-                    .FromPipeline(nameof(LayoutPipeline))
-                    .First(x => x.Source.FileName == "layout.hbs")
-                    .GetContentStringAsync())),
-                new RenderHandlebars("template")
-                    .Configure(async (context, document, handlebars) =>
-                    {
-                        foreach (var partial in context.Outputs
-                            .FromPipeline(nameof(LayoutPipeline)).WhereContainsKey("partial"))
-                        {
-                            handlebars.RegisterTemplate(
-                                partial.GetString("partial"),
-                                await partial.GetContentStringAsync());
-                        }
-                    }).WithModel(Config.FromDocument(async doc => new
-                    {
-                        body = await doc.GetContentStringAsync()
-                    })),
-                new SetContent(Config.FromDocument(x => x.GetString("template")))
-            };
+            PostProcessModules = ApplyLayout.Modules;
 
             OutputModules = new ModuleList
             {
                 new WriteFiles()
             };
         }
+    }
+
+    public static class ApplyLayout
+    {
+        public static ModuleList Modules => new ModuleList
+        {
+            new SetMetadata("template", Config.FromContext(async ctx => await ctx.Outputs
+                .FromPipeline(nameof(LayoutPipeline))
+                .First(x => x.Source.FileName == "layout.hbs")
+                .GetContentStringAsync())),
+            new RenderHandlebars("template")
+                .Configure(async (context, document, handlebars) =>
+                {
+                    foreach (var partial in context.Outputs
+                        .FromPipeline(nameof(LayoutPipeline)).WhereContainsKey("partial"))
+                    {
+                        handlebars.RegisterTemplate(
+                            partial.GetString("partial"),
+                            await partial.GetContentStringAsync());
+                    }
+                }).WithModel(Config.FromDocument(async (doc, ctx) => new
+                {
+                    title = doc.GetString(Keys.Title),
+                    body = await doc.GetContentStringAsync(),
+                    link = ctx.GetLink(doc),
+                    year = DateTime.UtcNow.Year
+                })),
+            new SetContent(Config.FromDocument(x => x.GetString("template")))
+        };
     }
 
     public class TagIndexPipeline : Pipeline
@@ -87,7 +98,8 @@ namespace site
                     .WithModel(Config.FromContext(context => new
                     {
                         tags = context.Outputs.FromPipeline(nameof(TagsPipeline))
-                            .OrderBy(x => x.GetString(Keys.GroupKey))
+                            .OrderByDescending(x => x.GetChildren().Length)
+                            .ThenBy(x => x.GetString(Keys.GroupKey))
                             .Select(tag => new
                             {
                                 link = context.GetLink(tag),
@@ -96,6 +108,8 @@ namespace site
                             })
                     }))
             };
+
+            PostProcessModules = ApplyLayout.Modules;
 
             OutputModules = new ModuleList
             {
@@ -138,7 +152,8 @@ namespace site
                     new ReplaceDocuments(nameof(BlogPostPipeline)),
                     new GroupDocuments("Tags")
                 }.Reverse(),
-                new SetDestination(Config.FromDocument(doc => new NormalizedPath($"./tags/{doc[Keys.GroupKey]}.html"))),
+                new SetDestination(Config.FromDocument(doc => new NormalizedPath($"./tags/{doc.GetString(Keys.GroupKey)}.html"))),
+                new OptimizeFileName(),
                 new RenderHandlebars()
                     .WithModel(Config.FromDocument((doc, context) => new
                     {
@@ -152,7 +167,9 @@ namespace site
                                 date = child.GetDateTime("Published").ToLongDateString()
                             }),
                         tags = context.Inputs
-                            .OrderBy(x => x.GetString(Keys.GroupKey))
+                            .OrderByDescending(x => x.GetChildren().Length)
+                            .ThenBy(x => x.GetString(Keys.GroupKey))
+                            .Take(10)
                             .Select(tag => new
                             {
                                 link = context.GetLink(tag),
@@ -161,6 +178,8 @@ namespace site
                             })
                     }))
             };
+
+            PostProcessModules = ApplyLayout.Modules;
 
             OutputModules = new ModuleList
             {
@@ -203,6 +222,8 @@ namespace site
                             })
                     }))
             };
+
+            PostProcessModules = ApplyLayout.Modules;
 
             OutputModules = new ModuleList
             {
@@ -269,6 +290,8 @@ namespace site
                     }))
             };
 
+            PostProcessModules = ApplyLayout.Modules;
+
             OutputModules = new ModuleList
             {
                 new WriteFiles()
@@ -284,6 +307,20 @@ namespace site
             ProcessModules = new ModuleList
             {
                 new CopyFiles("./assets/{css,fonts,js}/**/*")
+            };
+        }
+    }
+
+    public class FeedsPipeline : Pipeline
+    {
+        public FeedsPipeline()
+        {
+            Dependencies.Add(nameof(BlogPostPipeline));
+
+            ProcessModules = new ModuleList
+            {
+                new GenerateFeeds()
+                    .WithAtomPath("atom.xml")
             };
         }
     }

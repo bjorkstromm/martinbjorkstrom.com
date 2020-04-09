@@ -11,6 +11,7 @@
     <PackageReference Include="Statiq.Yaml" Version="1.0.0-alpha.29" />
     <PackageReference Include="Statiq.Markdown" Version="1.0.0-alpha.29" />
     <PackageReference Include="Statiq.Html" Version="1.0.0-alpha.29" />
+    <PackageReference Include="Statiq.Feeds" Version="1.0.0-alpha.29" />
   </ItemGroup>
 
 </Project>
