@@ -20,7 +20,9 @@ namespace site
             return Bootstrapper
                 .Factory
                 .CreateDefault(args)
-                .AddSetting(Keys.LinkLowercase, true) 
+                .AddSetting(Keys.LinkLowercase, true)
+                .AddSetting(Keys.LinksUseHttps, true)
+                .AddSetting(Keys.Host, "martinbjorkstrom.com")
                 .RunAsync();
         }
     }
@@ -306,7 +308,7 @@ namespace site
             Isolated = true;
             ProcessModules = new ModuleList
             {
-                new CopyFiles("./assets/{css,fonts,js}/**/*")
+                new CopyFiles("./assets/{css,fonts,js}/**/*", "*.{png,ico,webmanifest}")
             };
         }
     }
@@ -319,8 +321,43 @@ namespace site
 
             ProcessModules = new ModuleList
             {
+                new ConcatDocuments(nameof(BlogPostPipeline)),
+                new OrderDocuments(Config.FromDocument((x => x.GetDateTime(FeedKeys.Published))))
+                    .Descending(),
                 new GenerateFeeds()
-                    .WithAtomPath("atom.xml")
+                    .WithFeedTitle("Martin Björkström")
+                    .WithFeedDescription("Driving Digital Transformation on Serverless Containers...")
+                    .WithFeedAuthor("Martin Björkström")
+            };
+
+            OutputModules = new ModuleList
+            {
+                new WriteFiles()
+            };
+        }
+    }
+    
+    public class ContentPipeline : Pipeline
+    {
+        public ContentPipeline()
+        {
+            InputModules = new ModuleList
+            {
+                new ReadFiles("*.md")
+            };
+
+            ProcessModules = new ModuleList
+            {
+                new ExtractFrontMatter(new ParseYaml()),
+                new RenderMarkdown(),
+                new SetDestination(".html")
+            };
+
+            PostProcessModules = ApplyLayout.Modules;
+
+            OutputModules = new ModuleList
+            {
+                new WriteFiles()
             };
         }
     }
