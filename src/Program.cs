@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
 using Statiq.App;
@@ -9,7 +8,7 @@ using Statiq.Feeds;
 using Statiq.Handlebars;
 using Statiq.Html;
 using Statiq.Markdown;
-using Statiq.Yaml;
+using Statiq.Yaml; 
 
 namespace site
 {
@@ -100,13 +99,13 @@ namespace site
                     .WithModel(Config.FromContext(context => new
                     {
                         tags = context.Outputs.FromPipeline(nameof(TagsPipeline))
-                            .OrderByDescending(x => x.GetChildren().Length)
+                            .OrderByDescending(x => x.GetChildren().Count)
                             .ThenBy(x => x.GetString(Keys.GroupKey))
                             .Select(tag => new
                             {
                                 link = context.GetLink(tag),
                                 title = tag.GetString(Keys.GroupKey),
-                                count = tag.GetChildren().Length
+                                count = tag.GetChildren().Count
                             })
                     }))
             };
@@ -156,6 +155,8 @@ namespace site
                 }.Reverse(),
                 new SetDestination(Config.FromDocument(doc => new NormalizedPath($"./tags/{doc.GetString(Keys.GroupKey)}.html"))),
                 new OptimizeFileName(),
+                // Due to bug https://github.com/statiqdev/Statiq.Framework/issues/93, we must set directory again
+                new SetDestination(Config.FromDocument(doc => new NormalizedPath("./tags/").Combine(doc.Destination.FileName))),
                 new RenderHandlebars()
                     .WithModel(Config.FromDocument((doc, context) => new
                     {
@@ -169,14 +170,14 @@ namespace site
                                 date = child.GetDateTime("Published").ToLongDateString()
                             }),
                         tags = context.Inputs
-                            .OrderByDescending(x => x.GetChildren().Length)
+                            .OrderByDescending(x => x.GetChildren().Count)
                             .ThenBy(x => x.GetString(Keys.GroupKey))
                             .Take(10)
                             .Select(tag => new
                             {
                                 link = context.GetLink(tag),
                                 title = tag.GetString(Keys.GroupKey),
-                                count = tag.GetChildren().Length
+                                count = tag.GetChildren().Count
                             })
                     }))
             };
@@ -273,14 +274,14 @@ namespace site
                                 title = post.GetString(Keys.Title),
                             }), 
                         tags = context.Outputs.FromPipeline(nameof(TagsPipeline))
-                            .OrderByDescending(x => x.GetChildren().Length)
+                            .OrderByDescending(x => x.GetChildren().Count)
                             .ThenBy(x => x.GetString(Keys.GroupKey))
                             .Take(10)
                             .Select(tag => new
                             {
                                 link = context.GetLink(tag),
                                 title = tag.GetString(Keys.GroupKey),
-                                count = tag.GetChildren().Length
+                                count = tag.GetChildren().Count
                             }),
                         socialMediaLinks = doc.GetChildren("socialMediaLinks")
                             .Select(socialMediaLink => new

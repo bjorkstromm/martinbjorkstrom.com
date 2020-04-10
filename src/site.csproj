@@ -3,15 +3,16 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <StaticVersion>1.0.0-beta.1</StaticVersion>
   </PropertyGroup>
   
   <ItemGroup>
-    <PackageReference Include="Handlebars.Net" Version="1.10.1" />
-    <PackageReference Include="Statiq.App" Version="1.0.0-alpha.29" />
-    <PackageReference Include="Statiq.Yaml" Version="1.0.0-alpha.29" />
-    <PackageReference Include="Statiq.Markdown" Version="1.0.0-alpha.29" />
-    <PackageReference Include="Statiq.Html" Version="1.0.0-alpha.29" />
-    <PackageReference Include="Statiq.Feeds" Version="1.0.0-alpha.29" />
+    <PackageReference Include="Statiq.App" Version="$(StaticVersion)" />
+    <PackageReference Include="Statiq.Yaml" Version="$(StaticVersion)" />
+    <PackageReference Include="Statiq.Markdown" Version="$(StaticVersion)" />
+    <PackageReference Include="Statiq.Html" Version="$(StaticVersion)" />
+    <PackageReference Include="Statiq.Feeds" Version="$(StaticVersion)" />
+    <PackageReference Include="Statiq.Handlebars" Version="$(StaticVersion)" />
   </ItemGroup>
 
 </Project>
