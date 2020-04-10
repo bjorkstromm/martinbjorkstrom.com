@@ -2,6 +2,7 @@
 using site.Extensions;
 using Statiq.Common;
 using Statiq.Core;
+using Statiq.Feeds;
 using Statiq.Handlebars;
 
 namespace site.Pipelines
@@ -24,13 +25,13 @@ namespace site.Pipelines
                     .WithModel(Config.FromContext(context => new
                     {
                         groups = context.Outputs.FromPipeline(nameof(BlogPostPipeline))
-                            .GroupBy(x => x.GetDateTime("Published").Year)
+                            .GroupBy(x => x.GetDateTime(FeedKeys.Published).Year)
                             .OrderByDescending(x => x.Key)
                             .Select(group => new
                             {
                                 key = group.Key,
                                 posts = group
-                                    .OrderByDescending(x => x.GetDateTime("Published"))
+                                    .OrderByDescending(x => x.GetDateTime(FeedKeys.Published))
                                     .Select(x => x.AsPost(context)),
                             })
                     }))

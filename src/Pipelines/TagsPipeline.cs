@@ -2,6 +2,7 @@
 using site.Extensions;
 using Statiq.Common;
 using Statiq.Core;
+using Statiq.Feeds;
 using Statiq.Handlebars;
 
 namespace site.Pipelines
@@ -33,7 +34,7 @@ namespace site.Pipelines
                     {
                         title = doc.GetString(Keys.GroupKey),
                         posts = doc.GetChildren()
-                            .OrderByDescending(x => x.GetDateTime("Published"))
+                            .OrderByDescending(x => x.GetDateTime(FeedKeys.Published))
                             .Select(x => x.AsPost(context)),
                         tags = context.Inputs
                             .OrderByDescending(x => x.GetChildren().Count)
