@@ -6,7 +6,7 @@ using Statiq.Yaml;
 
 namespace site.Pipelines
 {
-    public class BlogPostPipeline : AppliedLayoutPipeline
+    public class BlogPostPipeline : ApplyLayoutPipeline
     {
         public BlogPostPipeline()
         {

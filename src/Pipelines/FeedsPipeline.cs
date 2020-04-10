@@ -16,9 +16,6 @@ namespace site.Pipelines
                 new OrderDocuments(Config.FromDocument((x => x.GetDateTime(FeedKeys.Published))))
                     .Descending(),
                 new GenerateFeeds()
-                    .WithFeedTitle("Martin Björkström")
-                    .WithFeedDescription("Driving Digital Transformation on Serverless Containers...")
-                    .WithFeedAuthor("Martin Björkström")
             };
 
             OutputModules = new ModuleList

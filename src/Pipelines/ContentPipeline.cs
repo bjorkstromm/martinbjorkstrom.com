@@ -5,7 +5,7 @@ using Statiq.Yaml;
 
 namespace site.Pipelines
 {
-    public class ContentPipeline : AppliedLayoutPipeline
+    public class ContentPipeline : ApplyLayoutPipeline
     {
         public ContentPipeline()
         {

@@ -7,7 +7,7 @@ using Statiq.Handlebars;
 
 namespace site.Pipelines
 {
-    public class ArchivePipeline : AppliedLayoutPipeline
+    public class ArchivePipeline : ApplyLayoutPipeline
     {
         public ArchivePipeline()
         {

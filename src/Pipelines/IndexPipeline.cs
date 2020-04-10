@@ -8,7 +8,7 @@ using Statiq.Yaml;
 
 namespace site.Pipelines
 {
-    public class IndexPipeline : AppliedLayoutPipeline
+    public class IndexPipeline : ApplyLayoutPipeline
     {
         public IndexPipeline()
         {
@@ -26,7 +26,7 @@ namespace site.Pipelines
                 new RenderHandlebars()
                     .WithModel(Config.FromDocument((doc, context) => new
                     {
-                        description = doc.GetString("description"),
+                        description = context.Settings.GetString(FeedKeys.Description),
                         intro = doc.GetString("intro"),
                         posts = context.Outputs.FromPipeline(nameof(BlogPostPipeline))
                             .OrderByDescending(x => x.GetDateTime(FeedKeys.Published))

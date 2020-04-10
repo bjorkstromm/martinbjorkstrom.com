@@ -2,13 +2,14 @@
 using System.Linq;
 using Statiq.Common;
 using Statiq.Core;
+using Statiq.Feeds;
 using Statiq.Handlebars;
 
 namespace site.Pipelines
 {
-    public abstract class AppliedLayoutPipeline : Pipeline
+    public abstract class ApplyLayoutPipeline : Pipeline
     {
-        protected AppliedLayoutPipeline()
+        protected ApplyLayoutPipeline()
         {
             PostProcessModules = new ModuleList
             {
@@ -31,7 +32,7 @@ namespace site.Pipelines
                         title = doc.GetString(Keys.Title),
                         body = await doc.GetContentStringAsync(),
                         link = ctx.GetLink(doc),
-                        year = DateTime.UtcNow.Year
+                        year = ctx.Settings.GetString(FeedKeys.Copyright)
                     })),
                 new SetContent(Config.FromDocument(x => x.GetString("template")))
             };
