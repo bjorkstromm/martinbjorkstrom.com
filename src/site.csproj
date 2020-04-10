@@ -14,5 +14,9 @@
     <PackageReference Include="Statiq.Feeds" Version="$(StaticVersion)" />
     <PackageReference Include="Statiq.Handlebars" Version="$(StaticVersion)" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <Folder Include="Extensions" />
+  </ItemGroup>
 
 </Project>
