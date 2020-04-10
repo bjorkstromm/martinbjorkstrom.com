@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using site.Extensions;
 using Statiq.Common;
 using Statiq.Core;
 using Statiq.Handlebars;
@@ -33,22 +34,12 @@ namespace site.Pipelines
                         title = doc.GetString(Keys.GroupKey),
                         posts = doc.GetChildren()
                             .OrderByDescending(x => x.GetDateTime("Published"))
-                            .Select(child => new
-                            {
-                                link = context.GetLink(child),
-                                title = child.GetString(Keys.Title),
-                                date = child.GetDateTime("Published").ToLongDateString()
-                            }),
+                            .Select(x => x.AsPost(context)),
                         tags = context.Inputs
                             .OrderByDescending(x => x.GetChildren().Count)
                             .ThenBy(x => x.GetString(Keys.GroupKey))
                             .Take(10)
-                            .Select(tag => new
-                            {
-                                link = context.GetLink(tag),
-                                title = tag.GetString(Keys.GroupKey),
-                                count = tag.GetChildren().Count
-                            })
+                            .Select(x => x.AsTag(context)),
                     }))
             };
 

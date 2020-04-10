@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using site.Extensions;
 using Statiq.Common;
 using Statiq.Core;
 using Statiq.Handlebars;
@@ -23,19 +24,14 @@ namespace site.Pipelines
                     .WithModel(Config.FromContext(context => new
                     {
                         groups = context.Outputs.FromPipeline(nameof(BlogPostPipeline))
-                            .GroupBy(x => IMetadataConversionExtensions.GetDateTime(x, "Published").Year)
+                            .GroupBy(x => x.GetDateTime("Published").Year)
                             .OrderByDescending(x => x.Key)
                             .Select(group => new
                             {
                                 key = group.Key,
                                 posts = group
                                     .OrderByDescending(x => x.GetDateTime("Published"))
-                                    .Select(doc => new
-                                    {
-                                        link = context.GetLink(doc),
-                                        title = doc.GetString(Keys.Title),
-                                        date = doc.GetDateTime("Published").ToLongDateString()
-                                    }),
+                                    .Select(x => x.AsPost(context)),
                             })
                     }))
             };

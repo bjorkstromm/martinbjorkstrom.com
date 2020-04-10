@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using site.Extensions;
 using Statiq.Common;
 using Statiq.Core;
 using Statiq.Handlebars;
@@ -27,40 +28,21 @@ namespace site.Pipelines
                         description = doc.GetString("description"),
                         intro = doc.GetString("intro"),
                         posts = context.Outputs.FromPipeline(nameof(BlogPostPipeline))
-                            .OrderByDescending(x => IMetadataConversionExtensions.GetDateTime(x, "Published"))
+                            .OrderByDescending(x => x.GetDateTime("Published"))
                             .Take(3)
-                            .Select(post => new
-                            {
-                                link = context.GetLink(post),
-                                title = post.GetString(Keys.Title),
-                                excerpt = post.GetString("Excerpt"),
-                                date = post.GetDateTime("Published").ToLongDateString()
-                            }),
+                            .Select(x => x.AsPost(context)),
                         olderPosts = context.Outputs.FromPipeline(nameof(BlogPostPipeline))
                             .OrderByDescending(x => x.GetDateTime("Published"))
                             .Skip(3)
-                            .Select(post => new
-                            {
-                                link = context.GetLink(post),
-                                title = post.GetString(Keys.Title),
-                            }), 
+                            .Select(x => x.AsPost(context)), 
                         tags = context.Outputs.FromPipeline(nameof(TagsPipeline))
                             .OrderByDescending(x => x.GetChildren().Count)
                             .ThenBy(x => x.GetString(Keys.GroupKey))
                             .Take(10)
-                            .Select(tag => new
-                            {
-                                link = context.GetLink(tag),
-                                title = tag.GetString(Keys.GroupKey),
-                                count = tag.GetChildren().Count
-                            }),
-                        socialMediaLinks = doc.GetChildren("socialMediaLinks")
-                            .Select(socialMediaLink => new
-                            {
-                                link = socialMediaLink.GetString("link"),
-                                @class = socialMediaLink.GetString("class"),
-                                title = socialMediaLink.GetString("title")
-                            })
+                            .Select(x => x.AsTag(context)),
+                        socialMediaLinks = doc
+                            .GetChildren("socialMediaLinks")
+                            .Select(x => x.AsDynamic())
                     }))
             };
 
