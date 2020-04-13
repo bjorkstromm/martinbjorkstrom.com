@@ -1,0 +1,13 @@
+<header>
+    <h1>{{title}}</h1>
+    <p><em>Published on {{date}}</em></p>
+    <ul class="actions small">
+        {{#each tags}}
+        <li><a role="button" href="{{link}}" class="button small ">{{title}}</a></li>
+        {{/each}}
+    </ul>
+</header>
+
+<div id="content">
+    {{{body}}}
+</div>

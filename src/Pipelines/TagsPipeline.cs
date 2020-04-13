@@ -27,8 +27,6 @@ namespace site.Pipelines
                 }.Reverse(),
                 new SetDestination(Config.FromDocument(doc => new NormalizedPath($"./tags/{doc.GetString(Keys.GroupKey)}.html"))),
                 new OptimizeFileName(),
-                // Due to bug https://github.com/statiqdev/Statiq.Framework/issues/93, we must set directory again
-                new SetDestination(Config.FromDocument(doc => new NormalizedPath("./tags/").Combine(doc.Destination.FileName))),
                 new RenderHandlebars()
                     .WithModel(Config.FromDocument((doc, context) => new
                     {
