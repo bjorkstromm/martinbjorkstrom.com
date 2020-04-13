@@ -1,0 +1,27 @@
+﻿<h1>{{title}}</h1>
+
+<div id="content">
+    <div class="row">
+        <div class="8u 12u$(medium)">
+            {{#each posts}}
+            <div>
+                <a href="{{link}}">
+                    <h2>{{title}}</h2>
+                </a>
+                <p><em>Posted on {{date}}</em></p>
+            </div>
+            {{/each}}
+        </div>
+
+        <div class="4u 12u$(medium)">
+            <ul class="actions small">
+                {{#each tags}}
+                <li><a role="button" href="{{link}}" class="button small ">{{title}} ({{count}})</a></li>
+                {{/each}}
+            </ul>
+            <ul class="actions small">
+                <li><a href="/tags" class="button small">View All Tags &rarr;</a></li>
+            </ul>
+        </div>
+    </div>
+</div>

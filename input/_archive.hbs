@@ -1,0 +1,20 @@
+﻿<h1>Archive</h1>
+
+<div id="content">
+
+    {{#each groups}}
+    <h1>{{key}}</h1>
+    <hr />
+
+    {{#each posts}}
+    <div>
+        <a href="{{link}}">
+            <h2>{{title}}</h2>
+        </a>
+        <p><em>Posted on {{date}}</em></p>
+    </div>
+    {{/each}}
+
+    {{/each}}
+
+</div>

@@ -1,0 +1,74 @@
+﻿---
+intro: >
+  Hello, my name is Martin Björkström.
+  This is my blog, where my intentions is to write about the results of my software related tinkering.
+  I am a father of three, fiancé of one, and a Open Source contributor.
+socialMediaLinks:
+  - link: https://twitter.com/mholo65
+    title: Twitter (mholo65)
+    class: fa fa-twitter
+  - link: https://github.com/mholo65
+    title: GitHub (mholo65)
+    class: fa fa-github
+  - link: https://keybase.io/mholo65
+    title: Keybase (mholo65)
+    class: fa fa-key
+  - link: https://stackoverflow.com/users/6287173/mholo65
+    title: Stack Overflow (mholo65)
+    class: fa fa-stack-overflow
+  - link: https://www.linkedin.com/in/martin-bjorkstrom
+    title: LinkedIn
+    class: fa fa-linkedin
+---
+<header>
+    <h1>{{description}}</h1>
+    <p>{{intro}}</p>
+</header>
+
+<div id="content">
+
+    <div class="row">
+        <div class="8u 12u$(medium)">
+            {{#each posts}}
+            <div>
+                <a href="{{link}}">
+                    <h2>{{title}}</h2>
+                </a>
+                <p>Posted on {{date}}</p>
+                <p>{{{excerpt}}}</p>
+            </div>
+            {{/each}}
+        </div>
+        <div class="4u 12u$(medium)">
+
+            <h5>Tags</h5>
+            <ul class="actions small">
+                {{#each tags}}
+                <li><a role="button" href="{{link}}" class="button small ">{{title}} ({{count}})</a></li>
+                {{/each}}
+            </ul>
+            <ul class="actions small">
+                <li><a href="/tags" class="button small">View All Tags &rarr;</a></li>
+            </ul>
+
+            <h5>Older Posts</h5>
+            <ul>
+                {{#each olderPosts}}
+                <li><a href="{{link}}">{{title}}</a></li>
+                {{/each}}
+            </ul>
+            <ul class="actions small">
+                <li><a href="/posts" class="button small">Archive &rarr;</a></li>
+            </ul>
+
+            <hr />
+            <h5>On The Interwebs</h5>
+            <ul class="list-unstyled">
+                {{#each socialMediaLinks}}
+                <li><a href="{{link}}"><i class="{{class}}"></i> {{title}}</a></li>
+                {{/each}}
+            </ul>
+        </div>
+    </div>
+
+</div>
