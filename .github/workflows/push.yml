@@ -1,7 +1,7 @@
-name: CI
+name: Deploy
 
 on:
-  pull_request:
+  push:
     branches: [ master ]
 
 jobs:
@@ -15,4 +15,7 @@ jobs:
       uses: actions/setup-dotnet@v1.4.0
 
     - name: Run Cake
-      run: ./build.sh
+      run: ./build.sh --target=deploy
+      env:
+        NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
