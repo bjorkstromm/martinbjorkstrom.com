@@ -22,7 +22,8 @@ namespace site.Pipelines
             ProcessModules = new ModuleList
             {
                     new ExtractFrontMatter(new ParseYaml()),
-                    new RenderMarkdown(),
+                    new RenderMarkdown()
+                        .UseExtensions(),
                     new GenerateExcerpt(),
                     new SetDestination(".html")
             };

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Statiq.App;
 using Statiq.Common;
 using Statiq.Feeds;
+using Statiq.Web;
 
 namespace site
 {
@@ -13,6 +14,7 @@ namespace site
             return Bootstrapper
                 .Factory
                 .CreateDefault(args)
+                .AddHostingCommands()
                 .AddSetting(Keys.LinkLowercase, true)
                 .AddSetting(Keys.LinksUseHttps, true)
                 .AddSetting(Keys.Host, "martinbjorkstrom.com")
