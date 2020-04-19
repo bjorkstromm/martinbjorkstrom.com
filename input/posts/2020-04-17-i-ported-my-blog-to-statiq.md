@@ -8,14 +8,14 @@ Tags:
 ### Background
 About six months ago, I got assigned a task to write a convention-driven documentation generator at work. Our first thought was to use [Wyam](https://wyam.io/) for this, but after discussions with [Dave Glick](https://github.com/daveaglick/), he lured us into trying out this new shiny stuff he was working on, called [Statiq](https://statiq.dev/). Creating new stuff with Wyam at that point would have resulted in a rewrite once Statiq would be released, making Wyam obsolete.
 
-We started out with Statiq, and for someone with almost zero-experience with Wyam, the learning-curve was steep. The lack of documentation for Statiq at that time resulted in lots of chatting with Dave and lots of source code reading. The end result, however, turned out great. We did lots of cool stuff like generating tables and pages from SQL queries, downloading artifacts from Azure DevOps and generating documentation from the assemblies, integrating Swagger UI for API documentation, etc, etc. For me, Wyam has always been magic that I never really grasped, but Statiq on the other hand was really easy to work with once you got the hang of it.
+We started out with Statiq, and for someone with almost zero-experience with Wyam, the learning-curve was steep. The lack of documentation for Statiq at that time resulted in lots of chatting with Dave and lots of source code reading. The result, however, turned out great. We did lots of cool stuff like generating tables and pages from SQL queries, downloading artifacts from Azure DevOps, and generating documentation from the assemblies, integrating Swagger UI for API documentation, etc. For me, Wyam has always been magic that I never really grasped, but Statiq on the other hand was easy to work with once you got the hang of it.
 
 So, what is Statiq?
 > Statiq is the world's most powerful static generation platform, allowing you to use or create a static generator that's exactly what you need.
 >
 > -- <cite>[Statiq/Dave Glick](https://statiq.dev/)</cite>
 
-Seems compelling, right? Additionally, since Statiq runs on .NET, you'll have all the power of .NET in your static generator pipelines. This is what really makes it shine!
+Seems compelling, right? Additionally, since Statiq runs on .NET, you will have all the power of .NET in your static generator pipelines. This is what really makes it shine!
 
 #### How Statiq works
 _(The following section is copied from the official Statiq documentation and reflects the state of Statiq by the time this blog post was written)_
@@ -29,27 +29,27 @@ Statiq is powerful because it combines a few simple building blocks that can be 
 * The final output of each pipeline is made available to other pipeline and may be written to output files or deployed to hosting services.
 
 ### Motivation
-Back in December, when the documentation generator I was working on was feature complete, I wanted to continue using Statiq as it was still evolving. This was when I decided that my next project will be porting this blog to use Statiq. The old Wyam template that I was using worked, but it was something I had copy-pasted from [Gary Park's blog](https://github.com/gep13/gep13) and I had almost zero knowledge on what happens behind the scene. As most software developers, I don't trust magic, I need to know how stuff works. Therefore my next project would be porting this blog to Statiq.
+Back in December, when the documentation generator I was working on was feature complete, I wanted to continue using Statiq as it was still evolving. This was when I decided that my next project will be porting this blog to use Statiq. The old Wyam template that I was using worked, but it was something I had copy-pasted from [Gary Park's blog](https://github.com/gep13/gep13) and I had almost zero knowledge on what happens behind the scene. As most software developers, I do not trust magic, I need to know how stuff works. Therefore, my next project would be porting this blog to Statiq.
 
 <blockquote class="twitter-tweet"><p lang="en" dir="ltr">TODO: Rewrite my blog with <a href="https://twitter.com/statiqdev?ref_src=twsrc%5Etfw">@statiqdev</a> and then blog about it. I&#39;ve had the privilege to work with the framework for a work thingy and I see great potential in it. Wyam was pure magic to me, but Statiq I can understand 😀</p>&mdash; Martin Björkström (@mholo65) <a href="https://twitter.com/mholo65/status/1202304328465301512?ref_src=twsrc%5Etfw">December 4, 2019</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script> 
 
 <br/>
 
 ### Attempt 1 - Porting Wyam Blog recipe to Statiq
-My first though was to port the old Wyam blog recipe and theme to Statiq. So I cloned Wyam sources and started porting these to Statiq.
+My first though was to port the old Wyam blog recipe and theme to Statiq. So, I cloned Wyam sources and started porting these to Statiq.
 * [Wyam Blog Recipe](https://github.com/Wyamio/Wyam/tree/94a3f1ba258b7d1aaf4f9e55b222697698346396/src/recipes/Wyam.Blog)
 * [Phantom Blog Theme](https://github.com/Wyamio/Wyam/tree/94a3f1ba258b7d1aaf4f9e55b222697698346396/themes/Blog/Phantom)
 
-After a couple of hours working on this, which can be found [here](https://github.com/mholo65/mholo65/commits/feature/statiq), I quickly realized that this is very difficult and time consuming. And worst of all, I was porting code which I had no idea of what it was doing. The Wyam blog recipe was very extensible and I didn't need many of the extension points it was offering. Some of the code would also have been better off just re-written in Statiq. Once again, I consulted Dave...
+After a couple of hours working on this, which can be found [here](https://github.com/mholo65/mholo65/commits/feature/statiq), I quickly realized that this is very difficult and time consuming. And worst of all, I was porting code which I had no idea of what it was doing. The Wyam blog recipe was very extensible and I did not need many of the extension points it was offering. Some of the code would also have been better off just re-written in Statiq. Once again, I consulted Dave...
 
 ### Attempt 2 - Using Statiq.Web
-Once Dave was happy with [Statiq Framework](https://github.com/statiqdev/Statiq.Framework), which is the core of Statiq, he started working on the replacements for Wyam recipes, namely [Statiq.Web](https://github.com/statiqdev/Statiq.Web) and [Statiq.Docs](https://github.com/statiqdev/Statiq.Docs). So in beginning of March I decided to give Statiq.Web a go (source code [here](https://github.com/mholo65/mholo65/commits/statiq.web)). I quickly faced same problem here as with [Attempt 1](#attempt-1-porting-wyam-blog-recipe-to-statiq). While the recipe was mostly ported, it still lacked themes, which led me into porting the old Wyam themes to Statiq. The end result would have been much like using Wyam, i.e. magic which I didn't understand :) So I wanted full control...
+Once Dave was happy with [Statiq Framework](https://github.com/statiqdev/Statiq.Framework), which is the core of Statiq, he started working on the replacements for Wyam recipes, namely [Statiq.Web](https://github.com/statiqdev/Statiq.Web) and [Statiq.Docs](https://github.com/statiqdev/Statiq.Docs). So in beginning of March I decided to give Statiq.Web a go (source code [here](https://github.com/mholo65/mholo65/commits/statiq.web)). I quickly faced same problem here as with [Attempt 1](#attempt-1-porting-wyam-blog-recipe-to-statiq). While the recipe was mostly ported, it still lacked themes, which led me into porting the old Wyam themes to Statiq. The result would have been much like using Wyam, i.e. magic which I did not understand :) So I wanted full control...
 
 ### Attempt 3 - Using Statiq.Framework
 As I had used [Statiq Framework](https://github.com/statiqdev/Statiq.Framework) previously for work related stuff, I was quite comfortable with this approach. I started by [contributing a Handlebars module to Statiq](https://github.com/statiqdev/Statiq.Framework/pull/90), because I prefer using Handlebars over Razor for simple templates. Once the Handlebars module was pulled in, I started porting my blog. The first thing I did was to take the HTML output from the old Wyam-powered blog and create handlebars templates from it. next step was to create some pipelines. The basics of the pipelines are described in the following sections. To better understand the concept of Statiq pipelines and phases, please read [Statiq's offical documentation](https://statiq.dev/framework/concepts/pipelines). The full source for the pipelines that creates my blog can be found on [GitHub](https://github.com/mholo65/mholo65/tree/master/src/Pipelines).
 
 #### Blog post pipeline
-The main pipeline in my blog engine is the pipeline that handles the blog posts. It reads all blog posts, using the `./posts/*.md` glob pattern in the `input` phase. The `process` phase extracts metadata from Front Matter (the small YAML section on top of the document), renders markdown to html, generates excerpt and lastly changes the destination extension to `.html`. We'll skip the `post process` phase for now, and go straight to the `output` phase which basically just writes the processed documents to disk.
+The main pipeline in my blog engine is the pipeline that handles the blog posts. It reads all blog posts, using the `./posts/*.md` glob pattern in the `input` phase. The `process` phase extracts metadata from Front Matter (the small YAML section on top of the document), renders markdown to html, generates excerpt and lastly changes the destination extension to `.html`. We will skip the `post process` phase for now and go straight to the `output` phase which basically just writes the processed documents to disk.
 
 ```csharp
 public BlogPostPipeline()
@@ -78,9 +78,9 @@ public BlogPostPipeline()
 ```
 
 #### Tags pipeline
-Every blog post contains a list of tags, defined in the Front Matter. These tags are displayed on the various pages, including the post itself, the index page (which shows the top-ten tags), and the tags page which list all tags. For each tag, the site also have a page which lists all blog posts tagged with the specific tag (see e.g. [`.NET`](/tags/net)). The tags pipeline creates the tag documents which is used on the various pages and which results in the separate tag pages. In order to get the tags from the blog posts, we specify that this pipeline has a dependency on the blog post pipeline. This will instruct Statiq to execute `process` phase of the blog post pipeline before executing the `process` phase of the tags pipeline and also make the blog posts available inside the `process` phase.
+Every blog post contains a list of tags, defined in the Front Matter. These tags are displayed on the various pages, including the post itself, the index page (which shows the top-ten tags), and the tags page which list all tags. For each tag, the site also have a page which lists all blog posts tagged with the specific tag (see e.g. [`.NET`](/tags/net)). The tags pipeline creates the tag documents which is used on the various pages and which results in the separate tag pages. In order to get the tags from the blog posts, we specify that this pipeline has a dependency on the blog post pipeline. This will instruct Statiq to execute `process` phase of the blog post pipeline before executing the `process` phase of the tags pipeline and make the blog posts available inside the `process` phase.
 
-The `input` phase reads a single document, which is the handlebars layout for our individual tag pages. The `process` phase will merge the single document from the `input` phase with the blog posts from the blog post pipeline grouped by tags. This basically gives us one document per tag (e.g. `.NET`, `Azure`, etc.) which contains the blog posts as child documents. All documents will have the content of the layout, `_tag.hbs`, which we read in the `input` phase. After that we'll set the destination of the output document to match the tag name, specified in the metadata with key `GroupKey`, and additionally sanitize the filename to make it URL-friendly. Last, but not least, we'll render the handlebars template as specified in the content of the document by passing it a custom model that we create for each document. If we'd used `Razor` as out template language instead of `Handlebars`, we could have moved the logic to the templates. I prefer logic-less templates, thus we need to prepare the model before passing it to the template engine.
+The `input` phase reads a single document, which is the handlebars layout for our individual tag pages. The `process` phase will merge the single document from the `input` phase with the blog posts from the blog post pipeline grouped by tags. This basically gives us one document per tag (e.g. `.NET`, `Azure`, etc.) which contains the blog posts as child documents. All documents will have the content of the layout, `_tag.hbs`, which we read in the `input` phase. After that we will set the destination of the output document to match the tag name, specified in the metadata with key `GroupKey`, and additionally sanitize the filename to make it URL-friendly. Last, but not least, we will render the handlebars template as specified in the content of the document by passing it a custom model that we create for each document. If we had used `Razor` as out template language instead of `Handlebars`, we could have moved the logic to the templates. I prefer logic-less templates; thus, we need to prepare the model before passing it to the template engine.
 
 ```csharp
 public TagsPipeline()
@@ -196,7 +196,7 @@ public ArchivePipeline()
 ```
 
 #### Index pipeline
-The index page has a similar pipeline as the [archive](#archive-pipeline) and [tag index](#tag-index-pipeline). It has a dependency on both the blog post pipeline and the tag pipeline in order to list the blog post and list the top-ten tags. The construction of the model used for rendering the template is a little more complex than the other pipelines, but apart from that they are pretty similar.
+The index page has a similar pipeline as the [archive](#archive-pipeline) and [tag index](#tag-index-pipeline). It has a dependency on both the blog post pipeline and the tag pipeline in order to list the blog post and list the top-ten tags. The construction of the model used for rendering the template is a little more complex than the other pipelines, but apart from that they are similar.
 
 ```csharp
 public IndexPipeline()
@@ -267,7 +267,7 @@ public FeedsPipeline()
 ```
 
 ### Assets pipeline
-This is a really simple, isolated pipeline for just copying assets (css, js, images, etc) from the input directory to the output directory.
+This is a simple, isolated pipeline for just copying assets (css, js, images, etc) from the input directory to the output directory.
 
 ```csharp
 public AssetsPipeline()
@@ -281,7 +281,7 @@ public AssetsPipeline()
 ```
 
 ### Layout pipelines
-The shared layout, containing e.g. header, footer and menu, for all the pages are created using two pipelines. The layout pipeline reads all handlebars templates where the filename doesn't begin with a underscore. This way we can separate the the individual templates (e.g. for tags, tag index, archive, etc.) with the shared templates. The shared templates may also [include metadata in the Front Matter](https://github.com/mholo65/mholo65/blob/master/input/scripts.hbs#L2), specifying whether it's a partial template.
+The shared layout, containing e.g. header, footer, and menu, for all the pages are created using two pipelines. The layout pipeline reads all handlebars templates where the filename does not begin with an underscore. This way we can separate the individual templates (e.g. for tags, tag index, archive, etc.) with the shared templates. The shared templates may also [include metadata in the Front Matter](https://github.com/mholo65/mholo65/blob/master/input/scripts.hbs#L2), specifying whether it's a partial template.
 
 ```csharp
 public LayoutPipeline()
@@ -297,8 +297,7 @@ public LayoutPipeline()
     };
 }
 ```
-
-The rendering of the shared template happens in the `post process` phase in a abstract pipeline called [`ApplyLayoutPipeline`](https://github.com/mholo65/mholo65/blob/master/src/Pipelines/ApplyLayoutPipeline.cs). In order to apply the layout to any document, we just need to inherit `ApplyLayoutPipeline` in our pipelines and the shared layout will be applied automatically.
+The rendering of the shared template happens in the `post process` phase in an abstract pipeline called [`ApplyLayoutPipeline`](https://github.com/mholo65/mholo65/blob/master/src/Pipelines/ApplyLayoutPipeline.cs). In order to apply the layout to any document, we just need to inherit `ApplyLayoutPipeline` in our pipelines and the shared layout will be applied automatically.
 
 ```csharp
 protected ApplyLayoutPipeline()
@@ -331,7 +330,7 @@ protected ApplyLayoutPipeline()
 }
 ```
 
-The `post process` phase, which is a powerful concept of Statiq, is a phase executed in parallel for each pipeline where you'll get access to all documents from all non-isolated pipeline. This can be used to get the tags displayed on the blog posts without creating a circular dependency. In order to get the tags from the tags pipeline into the blog posts, we pre-pend the modules in the `post process` phase with some additional modules which renders a template adding some metadata including the tags from the tags pipeline. This is important because we want the tags to be clickable, with links, taking us to the tag page.
+The `post process` phase, which is a powerful concept of Statiq, is a phase executed in parallel for each pipeline where you will get access to all documents from all non-isolated pipeline. This can be used to get the tags displayed on the blog posts without creating a circular dependency. In order to get the tags from the tags pipeline into the blog posts, we pre-pend the modules in the `post process` phase with some additional modules which renders a template adding some metadata including the tags from the tags pipeline. This is important because we want the tags to be clickable, with links, taking us to the tag page.
 
 ```csharp
 public BlogPostPipeline()
@@ -362,8 +361,8 @@ public BlogPostPipeline()
 ```
 
 ### Summary
-If you've made it this far, congratulations, now you hopefully know a little bit more about how Statiq works and the concept of pipelines, modules and documents. For me, the biggest _aha moment_ when starting out with Statiq came when I realized that documents are just placeholders for metadata. Documents may or may not contain content, but they'll always contain some metadata. Documents may or may not exist in the input directory, and the may or may not be written to the output directory, but they'll always contain metadata.
+If you have made it this far, congratulations, now you hopefully know a little bit more about how Statiq works and the concept of pipelines, modules, and documents. For me, the biggest _aha moment_ when starting out with Statiq came when I realized that documents are just placeholders for metadata. Documents may or may not contain content, but they will always contain some metadata. Documents may or may not exist in the input directory, and the may or may not be written to the output directory, but they will always contain metadata.
 
-Please note, that if your only intention is to create a blog, or port your existing Wyam-based blog to Statiq, this approach may not be what you wanted. You should therefore wait for [`Statiq.Web`](https://github.com/statiqdev/Statiq.Web/) to be released, and you'll get the same (or even better) experience that you can get with Wyam today. But if you, like me, likes tinkering then I definitely recommend creating you own site just using the modules found in [`Statiq.Framework`](https://github.com/statiqdev/Statiq.Framework). It's also very easy to create custom modules yourself, even though this doesn't contain any information about that. But stay tuned, who knows, maybe I'll write a post about custom modules or shortcodes in the future.
+Please note, that if your only intention is to create a blog, or port your existing Wyam-based blog to Statiq, this approach may not be what you wanted. You should therefore wait for [`Statiq.Web`](https://github.com/statiqdev/Statiq.Web/) to be released, and you'll get the same (or even better) experience that you can get with Wyam today. But if you, like me, likes tinkering then I definitely recommend creating you own site just using the modules found in [`Statiq.Framework`](https://github.com/statiqdev/Statiq.Framework). It is also very easy to create custom modules yourself, even though this does not contain any information about that. But stay tuned, who knows, maybe I will write a post about custom modules or shortcodes in the future.
 
 A special thanks goes out to [Dave Glick](https://github.com/daveaglick/) for all the effort you put into this wonderful framework and the countless hours of support. Wyam is dead, long live Statiq!
