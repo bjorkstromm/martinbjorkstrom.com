@@ -35,7 +35,7 @@ Back in December, when the documentation generator I was working on became featu
 
 <br/>
 
-### Attempt 1 - Porting Wyam Blog recipe to Statiq
+### Attempt 1 - Porting the Wyam Blog recipe to Statiq
 My first though was to port the old Wyam blog recipe and theme to Statiq. So, I cloned Wyam sources and started porting these to Statiq.
 * [Wyam Blog Recipe](https://github.com/Wyamio/Wyam/tree/94a3f1ba258b7d1aaf4f9e55b222697698346396/src/recipes/Wyam.Blog)
 * [Phantom Blog Theme](https://github.com/Wyamio/Wyam/tree/94a3f1ba258b7d1aaf4f9e55b222697698346396/themes/Blog/Phantom)
