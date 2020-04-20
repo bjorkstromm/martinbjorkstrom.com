@@ -1,5 +1,5 @@
 Title: I ported my blog to Statiq
-Published: 2020-04-17
+Published: 2020-04-20
 Tags: 
 - .NET
 - Statiq
