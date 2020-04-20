@@ -37,11 +37,8 @@ Task("Deploy")
     });
 
 Task("Preview")
-    .Does(() => DotNetCoreTool("watch", new DotNetCoreToolSettings {
-        ArgumentCustomization = args => args
-            .AppendSwitch("--project", " ", "preview.proj")
-            .Append("-- msbuild preview.proj /t:preview")
-    }));
+    .Does(() => DotNetCoreRun("./src/site.csproj", new ProcessArgumentBuilder()
+        .Append("preview")));
 
 Task("Default")
     .IsDependentOn("Build");

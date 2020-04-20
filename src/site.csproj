@@ -3,10 +3,11 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <StaticVersion>1.0.0-beta.2</StaticVersion>
+    <StaticVersion>1.0.0-beta.3</StaticVersion>
   </PropertyGroup>
   
   <ItemGroup>
+    <PackageReference Include="Statiq.Web" Version="1.0.0-alpha.5" />
     <PackageReference Include="Statiq.App" Version="$(StaticVersion)" />
     <PackageReference Include="Statiq.Yaml" Version="$(StaticVersion)" />
     <PackageReference Include="Statiq.Markdown" Version="$(StaticVersion)" />
