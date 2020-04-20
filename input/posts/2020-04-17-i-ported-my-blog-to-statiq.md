@@ -157,7 +157,7 @@ public TagIndexPipeline()
 ```
 
 #### Archive pipeline
-The [archive page](/posts/) that shows all blog post grouped by year is generated using the archive pipeline. This pipeline has a dependency on the blog post pipeline and basically works the same way as the [tag index pipeline](#tag-index-pipeline). We read the template in the `input` phase and sets a destination and render the template in the `process` phase.
+The [archive page](/posts/) that shows all blog posts grouped by year is generated using the archive pipeline. This pipeline has a dependency on the blog post pipeline and basically works the same way as the [tag index pipeline](#tag-index-pipeline). We read the template in the `input` phase and sets a destination and render the template in the `process` phase.
 
 ```csharp
 public ArchivePipeline()
