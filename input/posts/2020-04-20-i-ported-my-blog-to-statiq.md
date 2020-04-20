@@ -6,7 +6,7 @@ Tags:
 - Static site generator
 ---
 ### Background
-About six months ago, I got assigned a task to write a convention-driven documentation generator at work. Our first thought was to use [Wyam](https://wyam.io/) for this, but after discussions with [Dave Glick](https://github.com/daveaglick/), he lured us into trying out this new shiny stuff he was working on, called [Statiq](https://statiq.dev/). Creating new stuff with Wyam at that point would have resulted in a rewrite once Statiq would be released, making Wyam obsolete.
+About six months ago, I got assigned a task to write a convention-driven documentation generator at work. Our first thought was to use [Wyam](https://wyam.io/) for this, but after discussions with [Dave Glick](https://github.com/daveaglick/), he lured us into trying a new shiny project he was working on called [Statiq](https://statiq.dev/). Creating a new site with Wyam at that point would've resulted in a rewrite once Statiq was released since it would make Wyam obsolete.
 
 We started out with Statiq, and for someone with almost zero-experience with Wyam, the learning-curve was steep. The lack of documentation for Statiq at that time resulted in lots of chatting with Dave and lots of source code reading. The result, however, turned out great. We did lots of cool stuff like generating tables and pages from SQL queries, downloading artifacts from Azure DevOps, and generating documentation from the assemblies, integrating Swagger UI for API documentation, etc. For me, Wyam has always been magic that I never really grasped, but Statiq on the other hand was easy to work with once you got the hang of it.
 
