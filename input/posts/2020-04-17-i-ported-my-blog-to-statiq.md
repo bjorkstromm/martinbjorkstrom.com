@@ -196,7 +196,7 @@ public ArchivePipeline()
 ```
 
 #### Index pipeline
-The index page has a similar pipeline as the [archive](#archive-pipeline) and [tag index](#tag-index-pipeline). It has a dependency on both the blog post pipeline and the tag pipeline in order to list the blog post and list the top-ten tags. The construction of the model used for rendering the template is a little more complex than the other pipelines, but apart from that they are similar.
+The index page has a similar pipeline as the [archive](#archive-pipeline) and [tag index](#tag-index-pipeline). It has a dependency on both the blog post pipeline and the tag pipeline in order to list the blog posts and list the top-ten tags. The construction of the model used for rendering the template is a little more complex than the other pipelines, but apart from that they are similar.
 
 ```csharp
 public IndexPipeline()
