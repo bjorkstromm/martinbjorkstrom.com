@@ -250,9 +250,9 @@ Now we can test our implementation by first starting up the ASP.NET Core applica
 
 _This chapter is based on the ["Migrate WCF duplex services to gRPC"](https://docs.microsoft.com/en-us/dotnet/architecture/grpc-for-wcf-developers/migrate-duplex-services) section in Microsoft's documentation. Please read that guide for a better understanding of the original WCF service._
 
-Now that we have covered the basics with migrating WCF services to gRPC using protobuf-net.Grpc, we can look at some more complicated samples using gRPC streaming.
+Now that we have covered the basics with migrating WCF services to gRPC using protobuf-net.Grpc, we can look at some more complicated samples using streaming gRPC services.
 
-## Migrating the Data Contracts and Service Contracts
+## Server streaming RPC
 
 In this chapter we are going to look at the SimpleStockPriceTicker, which is a duplex service for which the client starts the connection with a list of stock symbols, and the server uses the callback interface to send updates as they become available. The WCF service has a single method with no return type because it uses the callback interface `ISimpleStockTickerCallback` to send data to the client in real time.
 
@@ -272,7 +272,236 @@ public interface ISimpleStockTickerCallback
 }
 ```
 
+When migrating this service to gRPC we can use gRPC streaming. [gRPC server streaming](https://grpc.io/docs/what-is-grpc/core-concepts/#server-streaming-rpc) works in a similar manner as the WCF service above. E.g. the client sends a single request, and the server responds with a stream of messages. The idiomatic way to implement server streaming in protobuf-net.Grpc is to return an `IAsyncEnumerable<T>` from the RPC method. This way we can use the same interface for the service contract on both the client- and the server-side. Please note that protobuf-net.Grpc also supports the [Google.Protobuf patterns](https://github.com/protobuf-net/protobuf-net.Grpc/blob/557d06c09d0e71b82f6dfb4f629e6cfe53de0abf/tests/protobuf-net.Grpc.Test/IAllOptions.cs#L28-L39) (using `IServerStreamWriter<T>` on server side and `AsyncServerStreamingCall<T>` on client side), but these are less idiomatic, and would require us to have separate interface methods for the client and server stubs. Using `IAsyncEnumerable<T>` for streaming would make our service contract to look like the code below.
 
+```csharp
+[ServiceContract]
+public interface IStockTickerService
+{
+    [OperationContract]
+    IAsyncEnumerable<StockTickerUpdate> Subscribe(SubscribeRequest request, CallContext context = default);
+}
+```
 
-## Summary
-As always, the complete sample code is available on GitHub, [here](https://github.com/mholo65/grpc-for-wcf-developers/).
+Notice the [`CallContext`](https://github.com/protobuf-net/protobuf-net.Grpc/blob/557d06c09d0e71b82f6dfb4f629e6cfe53de0abf/src/protobuf-net.Grpc/CallContext.cs) parameter, which is a unification of the gRPC call contexts for both client and server side. This allows us to access the call context on both client and server side, without the need for separate interfaces. Google.Protobuf generated code would instead use `CallOptions` on the client side, and `ServerCallContext` on the server side.
+
+Since the WCF service only used primitive types as parameters, we'll need to create a set of data contracts that can be used as parameters. The accompanying data contracts for the service above would look something like this. Note that we've added a timestamp field to the response message that was not present in the original WCF service.
+
+```csharp
+[DataContract]
+public class SubscribeRequest
+{
+    [DataMember(Order = 1)]
+    public List<string> Symbols { get; set; } = new List<string>();
+}
+
+[DataContract]
+public class StockTickerUpdate
+{
+    [DataMember(Order = 1)]
+    public string Symbol { get; set; }
+
+    [DataMember(Order = 2)]
+    public decimal Price { get; set; }
+
+    [DataMember(Order = 3)]
+    public DateTime Time { get; set; }
+}
+```
+
+By reusing the `IStockPriceSubscriberFactory` from Microsoft's migration guide, we could implement our stock ticker service as below. Flowing events to an async enumerable can easily be done by using [`System.Threading.Channels`](https://devblogs.microsoft.com/dotnet/an-introduction-to-system-threading-channels/).
+
+```csharp
+public class StockTickerService : IStockTickerService, IDisposable
+{
+    private readonly IStockPriceSubscriberFactory _subscriberFactory;
+    private readonly ILogger<StockTickerService> _logger;
+    private IStockPriceSubscriber _subscriber;
+
+    public StockTickerService(IStockPriceSubscriberFactory subscriberFactory, ILogger<StockTickerService> logger)
+    {
+        _subscriberFactory = subscriberFactory;
+        _logger = logger;
+    }
+
+    public IAsyncEnumerable<StockTickerUpdate> Subscribe(SubscribeRequest request, CallContext context = default)
+    {
+        var buffer = Channel.CreateUnbounded<StockTickerUpdate>();
+
+        _subscriber = _subscriberFactory.GetSubscriber(request.Symbols.ToArray());
+        _subscriber.Update += async (sender, args) =>
+        {
+            try
+            {
+                await buffer.Writer.WriteAsync(new StockTickerUpdate
+                {
+                    Symbol = args.Symbol,
+                    Price = args.Price,
+                    Time = DateTime.UtcNow
+                });
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"Failed to write message: {e.Message}");
+            }
+        };
+
+        return buffer.AsAsyncEnumerable(context.CancellationToken);
+    }
+
+    public void Dispose()
+    {
+        _subscriber?.Dispose();
+    }
+}
+```
+
+## Bidirectional streaming
+
+A WCF full-duplex service allows for asynchronous, real-time messaging in both directions. In the previous sample, the client started a request and received a stream of updates. In this version the client streams request messages in order to add and remove stocks from the subscription list without having to create a new subscription. The WCF service contract is defined below. The client starts the subscription using the `Subscribe` method and adds or removes stocks using the `AddSymbol` and `RemoveSymbol` methods. Updates are received via the callback interface, which is identical to the previous server streaming example.
+
+```csharp
+[ServiceContract(SessionMode = SessionMode.Required, CallbackContract = typeof(IFullStockTickerCallback))]
+public interface IFullStockTickerService
+{
+    [OperationContract(IsOneWay = true)]
+    void Subscribe();
+
+    [OperationContract(IsOneWay = true)]
+    void AddSymbol(string symbol);
+
+    [OperationContract(IsOneWay = true)]
+    void RemoveSymbol(string symbol);
+}
+
+[ServiceContract]
+public interface IFullStockTickerCallback
+{
+    [OperationContract(IsOneWay = true)]
+    void Update(string symbol, decimal price);
+}
+```
+
+An equivalent service contract implemented using protobuf-net.Grpc would then look as follows. The service accepts a stream of request messages and returns a stream of response messages. 
+
+```csharp
+[ServiceContract]
+public interface IFullStockTicker
+{
+    [OperationContract]
+    IAsyncEnumerable<StockTickerUpdate> Subscribe(IAsyncEnumerable<SymbolRequest> request, CallContext context = default);
+}
+```
+
+The accompanying data contracts are defined below. The request includes an action property, which specifies whether the symbol should be added or removed from the subscription. The response message is the same as in the previous example.
+
+```csharp
+public enum SymbolRequestAction
+{
+    Add = 0,
+    Remove = 1
+}
+
+[DataContract]
+public class SymbolRequest
+{
+    [DataMember(Order = 1)]
+    public SymbolRequestAction Action { get; set; }
+
+    [DataMember(Order = 2)]
+    public string Symbol { get; set; }
+}
+
+[DataContract]
+public class StockTickerUpdate
+{
+    [DataMember(Order = 1)]
+    public string Symbol { get; set; }
+
+    [DataMember(Order = 2)]
+    public decimal Price { get; set; }
+
+    [DataMember(Order = 3)]
+    public DateTime Time { get; set; }
+}
+```
+
+A implementation of the service looks like the following. We use the same technique as in the previous sample for flowing events through an `IAsyncEnumerable<T>` and additionally create a background task which enumerates over the request stream and reacts on the individual requests.
+
+```csharp
+public class FullStockTickerService : IFullStockTicker, IDisposable
+{
+    private readonly IFullStockPriceSubscriberFactory _subscriberFactory;
+    private readonly ILogger<FullStockTickerService> _logger;
+    private IFullStockPriceSubscriber _subscriber;
+    private Task _processRequestTask;
+    private CancellationTokenSource _cts;
+
+    public FullStockTickerService(IFullStockPriceSubscriberFactory subscriberFactory, ILogger<FullStockTickerService> logger)
+    {
+        _subscriberFactory = subscriberFactory;
+        _logger = logger;
+        _cts = new CancellationTokenSource();
+    }
+
+    public IAsyncEnumerable<StockTickerUpdate> Subscribe(IAsyncEnumerable<SymbolRequest> request, CallContext context)
+    {
+        var cancellationToken = CancellationTokenSource.CreateLinkedTokenSource(_cts.Token, context.CancellationToken).Token;
+        var buffer = Channel.CreateUnbounded<StockTickerUpdate>();
+
+        _subscriber = _subscriberFactory.GetSubscriber();
+        _subscriber.Update += async (sender, args) =>
+        {
+            try
+            {
+                await buffer.Writer.WriteAsync(new StockTickerUpdate
+                {
+                    Symbol = args.Symbol,
+                    Price = args.Price,
+                    Time = DateTime.UtcNow
+                });
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"Failed to write message: {e.Message}");
+            }
+        };
+
+        _processRequestTask = ProcessRequests(request, buffer.Writer, cancellationToken);
+
+        return buffer.AsAsyncEnumerable(cancellationToken);
+    }
+
+    private async Task ProcessRequests(IAsyncEnumerable<SymbolRequest> requests, ChannelWriter<StockTickerUpdate> writer, CancellationToken cancellationToken)
+    {
+        await foreach (var request in requests.WithCancellation(cancellationToken))
+        {
+            switch (request.Action)
+            {
+                case SymbolRequestAction.Add:
+                    _subscriber.Add(request.Symbol);
+                    break;
+                case SymbolRequestAction.Remove:
+                    _subscriber.Remove(request.Symbol);
+                    break;
+                default:
+                    _logger.LogWarning($"Unknown Action '{request.Action}'.");
+                    break;
+            }
+        }
+
+        writer.Complete();
+    }
+
+    public void Dispose()
+    {
+        _cts.Cancel();
+        _subscriber?.Dispose();
+    }
+}
+```
+
+# Summary
+You've made it this far. Congratulations! You now know of an additional way to migrate your WCF services to gRPC. This technique is hopefully much faster than rewriting existing data contracts in `.proto` format as you'll be (hopefully) able to reuse most of your data contracts with minimal code changes. Using protobuf-net.Grpc works best when both the server and clients are implemented using .NET, but there's also a possibility for interoperability with other languages by generating `.proto` schemas from your protobuf-net.Grpc services using the techniques described in my [previous blog post](2020-07-08-grpc-reflection-in-net).
+
+I hope you've learned as much about protobuf-net.Grpc as I did when I ported these samples and wrote this blog post. As always, complete sample code is available on [GitHub](https://github.com/mholo65/grpc-for-wcf-developers/).
