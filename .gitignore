@@ -294,3 +294,5 @@ config.wyam.packages.xml
 .netlify/
 .ionide/
 output/
+# Local Netlify folder
+.netlify
