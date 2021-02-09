@@ -19,7 +19,7 @@ In this sample, we are going to create a Language Server for `*.csproj` which en
 
 For parsing XML, we are going to use [Kirill Osenkov's XmlParser](https://github.com/KirillOsenkov/XmlParser). You may think that using `XmlReader` or `LINQ to XML` would be sufficient, this is however not true. The first and most important rule of implementing a Language Server, is that you'll need an error tolerant parser as most of the time the code in the editor is incomplete and syntactically incorrect. Microsoft left some valuable notes [here](https://github.com/Microsoft/tolerant-php-parser/blob/master/docs/HowItWorks.md) when they created the tolerant PHP parser, which currently backs PHP support in Visual Studio Code. Again, don't parse the files yourself (unless you know what you are doing), use a proper parser to get an Abstract Syntax Tree (AST).
 
-The full sample which we'll create in the rest of this blog post is available on GitHub at [https://github.com/mholo65/lsp-example/tree/blog-post](https://github.com/mholo65/lsp-example/tree/blog-post).
+The full sample which we'll create in the rest of this blog post is available on GitHub at [https://github.com/bjorkstromm/lsp-example/tree/blog-post](https://github.com/bjorkstromm/lsp-example/tree/blog-post).
 
 ### Creating the server
 First, well start of by creating a new .NET Core console application.
@@ -341,7 +341,7 @@ _package.json_
     "name": "client",
     "displayName": "Client",
     "description": "Example LSP client",
-    "publisher": "mholo65",
+    "publisher": "bjorkstromm",
     "version": "0.0.1",
     "engines": {
         "vscode": "^1.29.0"
@@ -406,8 +406,8 @@ export function activate(context: ExtensionContext) {
 ```
 
 ### Profit
-If you've read this far and maybe checked out the code in the [sample repository](https://github.com/mholo65/lsp-example/tree/blog-post), you should have a Visual Studio Code extension which adds autocomplete functionality for package references in `.csproj` files, just like in the tweet below.
-<blockquote class="twitter-tweet" data-conversation="none" data-lang="en"><p lang="en" dir="ltr">Now using XmlParser. Code&#39;s much cleaner, and it was a piece of cake to also get autocomplete for version. Btw, source is here <a href="https://t.co/cUnKGliC4T">https://t.co/cUnKGliC4T</a> <a href="https://t.co/ac3LizlY4S">pic.twitter.com/ac3LizlY4S</a></p>&mdash; Martin Björkström (@mholo65) <a href="https://twitter.com/mholo65/status/1066815193718669313?ref_src=twsrc%5Etfw">November 25, 2018</a></blockquote>
+If you've read this far and maybe checked out the code in the [sample repository](https://github.com/bjorkstromm/lsp-example/tree/blog-post), you should have a Visual Studio Code extension which adds autocomplete functionality for package references in `.csproj` files, just like in the tweet below.
+<blockquote class="twitter-tweet" data-conversation="none" data-lang="en"><p lang="en" dir="ltr">Now using XmlParser. Code&#39;s much cleaner, and it was a piece of cake to also get autocomplete for version. Btw, source is here <a href="https://t.co/cUnKGliC4T">https://t.co/cUnKGliC4T</a> <a href="https://t.co/ac3LizlY4S">pic.twitter.com/ac3LizlY4S</a></p>&mdash; Martin Björkström (@bjorkstromm) <a href="https://twitter.com/bjorkstromm/status/1066815193718669313?ref_src=twsrc%5Etfw">November 25, 2018</a></blockquote>
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
 &nbsp;

@@ -1,3 +1,3 @@
-# mholo65
+# martinbjorkstrom.com
 
-![Deploy](https://github.com/mholo65/mholo65/workflows/Deploy/badge.svg)
+![Deploy](https://github.com/bjorkstromm/martinbjorkstrom.com/workflows/Deploy/badge.svg)
