@@ -19,6 +19,10 @@ socialMediaLinks:
   - link: https://www.linkedin.com/in/martin-bjorkstrom
     title: LinkedIn
     class: fa fa-linkedin
+  - link: https://mastodon.social/@bjorkstromm
+    title: Mastodon (@bjorkstromm)
+    class: fa fa-link
+    rel: me
 ---
 <header>
     <h1>{{description}}</h1>
@@ -65,7 +69,7 @@ socialMediaLinks:
             <h5>On The Interwebs</h5>
             <ul class="list-unstyled">
                 {{#each socialMediaLinks}}
-                <li><a href="{{link}}"><i class="{{class}}"></i> {{title}}</a></li>
+                <li><a rel="me" href="{{link}}"><i class="{{class}}"></i> {{title}}</a></li>
                 {{/each}}
             </ul>
         </div>
